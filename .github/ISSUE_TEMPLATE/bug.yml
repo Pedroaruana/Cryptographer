@@ -1,0 +1,53 @@
+name: Bug
+description: Alguma coisa não está funcionando como deveria
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Antes de escrever: **nunca cole aqui uma senha, um arquivo pessoal
+        ou uma foto sua**. Esta issue é pública. Se precisar mostrar o
+        problema, use um arquivo de teste.
+
+  - type: dropdown
+    id: onde
+    attributes:
+      label: Onde aconteceu
+      options:
+        - Criptografar
+        - Descriptografar
+        - Esconder segredo
+        - Metadados
+        - Impressão digital
+        - Simuladores
+        - Outro lugar
+    validations:
+      required: true
+
+  - type: textarea
+    id: oque
+    attributes:
+      label: O que aconteceu
+      placeholder: Soltei um PNG na tela de esconder e ele recusou dizendo que não era imagem
+    validations:
+      required: true
+
+  - type: textarea
+    id: esperado
+    attributes:
+      label: O que eu esperava que acontecesse
+
+  - type: input
+    id: ambiente
+    attributes:
+      label: Navegador e sistema
+      placeholder: Chrome 141 no Windows 11
+
+  - type: checkboxes
+    id: confirmacoes
+    attributes:
+      label: Antes de enviar
+      options:
+        - label: Não colei nenhuma senha, arquivo pessoal ou foto minha aqui
+          required: true
+        - label: Consegui repetir o problema mais de uma vez

@@ -1,0 +1,29 @@
+name: Ideia
+description: Sugerir uma funcionalidade ou melhoria
+labels: ["melhoria"]
+body:
+  - type: textarea
+    id: ideia
+    attributes:
+      label: O que você quer que o site faça
+    validations:
+      required: true
+
+  - type: textarea
+    id: porque
+    attributes:
+      label: Por que isso resolve algum problema
+      placeholder: Hoje eu preciso de X e acabo tendo que fazer Y na mão
+
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Tipo
+      options:
+        - Método novo de criptografia
+        - Melhoria numa tela que já existe
+        - Tela nova
+        - Acessibilidade
+        - Outro
+    validations:
+      required: true
