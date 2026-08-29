@@ -1,0 +1,1811 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sketch: "Shantell Sans Variable", "Shantell Sans", ui-rounded, sans-serif;
+
+  --color-paper: #f7f5f0;
+  --color-paper-deep: #efeae0;
+  --color-card: #fffef6;
+  --color-ink: #1a1209;
+  --color-ink-soft: #3a2800;
+  --color-faint: #6b5c4a;
+  --color-hair: #c8c0b8;
+  /* azul de caneta esferografica. e a unica cor de destaque do site */
+  --color-accent: #1f4a8b;
+  --color-wax: #9b2418;
+  --color-wax-deep: #6f1810;
+  --color-pen: #1f4a8b;
+
+  --ease-paper: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-drop: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+:root {
+  color-scheme: light;
+}
+
+/* mesa de madeira a noite com papel envelhecido em cima. o tema escuro nao
+   e o claro invertido, e outro material */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-paper: #17130e;
+    --color-paper-deep: #221b14;
+    --color-card: #262019;
+    --color-ink: #ece2cf;
+    --color-ink-soft: #cbbda3;
+    --color-faint: #9c8f7a;
+    --color-hair: #4a4034;
+    --color-accent: #7fa8dd;
+    --color-pen: #7fa8dd;
+    --color-wax: #c8412f;
+    --color-wax-deep: #8c2618;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-paper: #17130e;
+  --color-paper-deep: #221b14;
+  --color-card: #262019;
+  --color-ink: #ece2cf;
+  --color-ink-soft: #cbbda3;
+  --color-faint: #9c8f7a;
+  --color-hair: #4a4034;
+  --color-accent: #7fa8dd;
+  --color-pen: #7fa8dd;
+  --color-wax: #c8412f;
+  --color-wax-deep: #8c2618;
+}
+
+/* cores dos desenhos em svg. viram classe pra seguir o tema, porque
+   atributo stroke com valor fixo nao acompanha */
+.s-ink {
+  stroke: var(--color-ink);
+}
+
+.s-pen {
+  stroke: var(--color-pen);
+}
+
+.f-ink {
+  fill: var(--color-ink);
+}
+
+.f-pen {
+  fill: var(--color-pen);
+}
+
+.f-card {
+  fill: var(--color-card);
+}
+
+.f-paper-deep {
+  fill: var(--color-paper-deep);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sketch);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+
+  /* fibra do papel. e ruido de verdade, nao degrade colorido */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23f)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: rgba(31, 74, 139, 0.18);
+}
+
+/* o conteudo respira ate perto da borda. antes tinha uma coluna estreita no
+   meio e dois vazios enormes nas laterais em tela grande */
+.wrap {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding-inline: clamp(1.25rem, 5vw, 5rem);
+}
+
+/* pra bloco de texto corrido, que fica ruim de ler se esticar demais */
+.wrap-tight {
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+  padding-inline: clamp(1.25rem, 5vw, 3rem);
+}
+
+/* ---------- tipografia ---------- */
+
+.display {
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
+.eyebrow {
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+/* rabisco embaixo do link, aparece no hover */
+.scribble {
+  position: relative;
+  text-decoration: none;
+}
+
+.scribble::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  bottom: -4px;
+  height: 6px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 6'%3E%3Cpath d='M1 4.2c9-2.4 18 1.4 27-.8s21 1.8 31-1' fill='none' stroke='%231f4a8b' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 60px 6px;
+  background-repeat: repeat-x;
+  opacity: 0;
+  transform: translateY(3px);
+  transition:
+    opacity 0.16s var(--ease-paper),
+    transform 0.16s var(--ease-paper);
+}
+
+.scribble:hover::after,
+.scribble[data-on="true"]::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- papelzinho ---------- */
+
+.sheet {
+  background: var(--color-card);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 2px rgba(28, 20, 8, 0.22),
+    3px 8px 14px rgba(28, 20, 8, 0.18),
+    8px 22px 40px rgba(28, 20, 8, 0.14);
+}
+
+.sheet-soft {
+  background: var(--color-card);
+  border: 0.6px solid var(--color-hair);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 2px rgba(28, 20, 8, 0.13),
+    3px 8px 14px rgba(28, 20, 8, 0.1);
+}
+
+.tilt-a {
+  transform: rotate(-0.6deg);
+}
+.tilt-b {
+  transform: rotate(0.45deg);
+}
+.tilt-c {
+  transform: rotate(-0.25deg);
+}
+
+/* ---------- controles ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.72rem 1.4rem;
+  border: 1.5px solid var(--color-ink);
+  border-radius: 2px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-sketch);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 3px 4px 0 rgba(28, 20, 8, 0.85);
+  transition:
+    transform 0.16s var(--ease-paper),
+    box-shadow 0.16s var(--ease-paper);
+}
+
+.btn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 6px 0 rgba(28, 20, 8, 0.85);
+}
+
+.btn:active:not(:disabled) {
+  transform: translate(2px, 3px);
+  box-shadow: 0 0 0 rgba(28, 20, 8, 0.85);
+}
+
+.btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  box-shadow: 2px 3px 0 rgba(28, 20, 8, 0.4);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-ink);
+  box-shadow: 3px 4px 0 rgba(28, 20, 8, 0.25);
+}
+
+.field {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--color-ink);
+  border-radius: 0;
+  font-family: var(--font-sketch);
+  font-size: 1rem;
+  color: var(--color-ink);
+  outline: none;
+  transition: border-color 0.16s var(--ease-paper);
+}
+
+.field::placeholder {
+  color: rgba(107, 92, 74, 0.65);
+}
+
+.field:focus {
+  border-color: var(--color-accent);
+}
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  background: transparent;
+  border: 1.3px solid var(--color-hair);
+  border-radius: 50%;
+  color: var(--color-ink);
+  cursor: pointer;
+  transition:
+    border-color 0.16s var(--ease-paper),
+    transform 0.22s var(--ease-drop),
+    background 0.16s var(--ease-paper);
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-ink);
+  transform: rotate(-14deg);
+  background: rgba(28, 20, 8, 0.05);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border: 1.2px solid rgba(122, 80, 16, 0.45);
+  border-radius: 2px;
+  background: transparent;
+  font-family: var(--font-sketch);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    background 0.16s var(--ease-paper),
+    border-color 0.16s var(--ease-paper),
+    transform 0.16s var(--ease-paper);
+}
+
+.chip[data-on="true"] {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-paper);
+  transform: rotate(-0.8deg);
+}
+
+.chip:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dropzone {
+  border: 2px dashed var(--color-hair);
+  border-radius: 2px;
+  background: var(--color-paper-deep);
+  transition:
+    border-color 0.16s var(--ease-paper),
+    background 0.16s var(--ease-paper),
+    transform 0.16s var(--ease-paper);
+}
+
+.dropzone[data-over="true"] {
+  border-color: var(--color-accent);
+  background: rgba(31, 74, 139, 0.06);
+  transform: rotate(-0.5deg) scale(1.005);
+}
+
+/* =====================================================================
+   animacao do lacre. a ideia e o arquivo virar uma carta selada:
+   levanta da mesa, embaralha, dobra e leva o carimbo de cera
+   ===================================================================== */
+
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 300px;
+  perspective: 1100px;
+}
+
+.letter {
+  position: relative;
+  width: min(340px, 82vw);
+  height: 220px;
+  transform-style: preserve-3d;
+  transition: transform 0.5s var(--ease-paper);
+}
+
+.stage[data-phase="idle"] .letter {
+  transform: rotate(-1.2deg);
+}
+
+.stage[data-phase="lift"] .letter,
+.stage[data-phase="scramble"] .letter {
+  transform: rotate(-1.6deg) translateY(-10px) scale(1.02);
+}
+
+.stage[data-phase="fold"] .letter,
+.stage[data-phase="sealed"] .letter,
+.stage[data-phase="sealed-idle"] .letter,
+.stage[data-phase="cracking"] .letter {
+  transform: rotate(-1.9deg) translateY(-4px);
+}
+
+.stage[data-phase="error"] .letter {
+  animation: refuse 0.5s var(--ease-paper) 2;
+}
+
+.stage[data-phase="sealed"] .letter {
+  animation: thud 0.32s var(--ease-paper) 0.42s;
+}
+
+.paper {
+  position: absolute;
+  inset: 0;
+  padding: 1.5rem 1.4rem;
+  background: var(--color-card);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 2px rgba(28, 20, 8, 0.22),
+    3px 8px 14px rgba(28, 20, 8, 0.18),
+    8px 22px 40px rgba(28, 20, 8, 0.14),
+    14px 48px 80px rgba(28, 20, 8, 0.08);
+  transform-origin: 50% 12%;
+  transition:
+    transform 0.62s var(--ease-paper),
+    opacity 0.4s var(--ease-paper);
+  overflow: hidden;
+}
+
+/* a dobra: o papel tomba pra tras e some atras do envelope */
+.stage[data-phase="fold"] .paper,
+.stage[data-phase="sealed"] .paper,
+.stage[data-phase="sealed-idle"] .paper,
+.stage[data-phase="cracking"] .paper,
+.stage[data-mode="decrypt"][data-phase="error"] .paper {
+  transform: rotateX(78deg) scaleY(0.34) translateY(-6%);
+  opacity: 0.45;
+}
+
+.paper-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  word-break: break-all;
+  min-height: 2.8rem;
+}
+
+.paper-body {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.42rem;
+  font-size: 0.78rem;
+  color: var(--color-faint);
+  word-break: break-all;
+  line-height: 1.25;
+}
+
+.paper-fold-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(28, 20, 8, 0.3), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-paper);
+  pointer-events: none;
+}
+
+.stage[data-phase="fold"] .paper-fold-shade,
+.stage[data-phase="sealed"] .paper-fold-shade,
+.stage[data-phase="sealed-idle"] .paper-fold-shade,
+.stage[data-phase="cracking"] .paper-fold-shade {
+  opacity: 1;
+}
+
+/* envelope que aparece por baixo quando o papel dobra */
+.envelope {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 150px;
+  background: var(--color-paper-deep);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 2px rgba(28, 20, 8, 0.22),
+    3px 8px 14px rgba(28, 20, 8, 0.18),
+    8px 22px 40px rgba(28, 20, 8, 0.14);
+  opacity: 0;
+  transform: translateY(14px) scale(0.97);
+  transition:
+    opacity 0.42s var(--ease-paper),
+    transform 0.52s var(--ease-paper);
+}
+
+.stage[data-phase="fold"] .envelope,
+.stage[data-phase="sealed"] .envelope,
+.stage[data-phase="sealed-idle"] .envelope,
+.stage[data-phase="cracking"] .envelope,
+.stage[data-phase="unfold"] .envelope,
+.stage[data-mode="decrypt"][data-phase="error"] .envelope {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.stage[data-phase="unscramble"] .envelope,
+.stage[data-phase="revealed"] .envelope {
+  opacity: 0;
+  transform: translateY(20px) scale(0.96);
+}
+
+/* a aba triangular do envelope */
+.envelope::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 0, 50% 58%, 100% 0);
+  background: rgba(28, 20, 8, 0.07);
+  border-bottom: 1.2px solid rgba(28, 20, 8, 0.35);
+}
+
+.stamp {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  padding: 0.2rem 0.5rem;
+  border: 1.2px solid rgba(31, 74, 139, 0.55);
+  color: var(--color-pen);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: rotate(-8deg);
+  opacity: 0.75;
+}
+
+/* ---------- o lacre de cera ---------- */
+
+.wax {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  width: 92px;
+  height: 92px;
+  margin-left: -46px;
+  margin-top: -46px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stage[data-phase="sealed"] .wax {
+  opacity: 1;
+  animation: waxDrop 0.66s var(--ease-drop) 0.16s both;
+}
+
+.stage[data-phase="cracking"] .wax,
+.stage[data-phase="sealed-idle"] .wax,
+.stage[data-mode="decrypt"][data-phase="error"] .wax {
+  opacity: 1;
+}
+
+.wax-half {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  overflow: hidden;
+  transition:
+    transform 0.72s var(--ease-paper),
+    opacity 0.72s var(--ease-paper);
+}
+
+.wax-half.left {
+  left: 0;
+}
+.wax-half.right {
+  left: 50%;
+}
+
+.wax-body {
+  position: absolute;
+  top: 0;
+  width: 92px;
+  height: 92px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.28), transparent 45%),
+    radial-gradient(circle at 70% 78%, rgba(0, 0, 0, 0.3), transparent 55%), var(--color-wax);
+  border: 1.5px solid var(--color-wax-deep);
+  /* borda irregular pra parecer cera derretida, nao um circulo do figma */
+  border-radius: 47% 53% 44% 56% / 52% 46% 54% 48%;
+  /* a fechadura e prensada na cera: tom escuro com um fio de luz embaixo */
+  color: rgba(70, 14, 8, 0.85);
+}
+
+.wax-half.left .wax-body {
+  left: 0;
+}
+.wax-half.right .wax-body {
+  left: -46px;
+}
+
+/* na descriptografia o lacre racha e as duas metades caem */
+.stage[data-phase="cracking"] .wax-half.left {
+  transform: translate(-30px, 34px) rotate(-26deg);
+  opacity: 0;
+}
+
+.stage[data-phase="cracking"] .wax-half.right {
+  transform: translate(30px, 40px) rotate(21deg);
+  opacity: 0;
+}
+
+.stage[data-phase="unscramble"] .wax,
+.stage[data-phase="unfold"] .wax,
+.stage[data-phase="revealed"] .wax {
+  opacity: 0;
+}
+
+/* senha errada: o lacre nao abre, so racha um pouco e volta */
+.wax-crack {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-paper);
+}
+
+.stage[data-phase="error"] .wax-crack {
+  opacity: 1;
+}
+
+.wax-crack path {
+  stroke: var(--color-wax-deep);
+  stroke-width: 2.4;
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+}
+
+.stage[data-phase="error"] .wax-crack path {
+  animation: crackIn 0.6s var(--ease-paper) 0.1s forwards;
+}
+
+/* ---------- barra de progresso desenhada a mao ---------- */
+
+.gauge {
+  position: relative;
+  width: min(340px, 82vw);
+  height: 10px;
+  margin-top: 1.6rem;
+  border: 1.2px solid var(--color-ink);
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--color-card);
+}
+
+.gauge-fill {
+  height: 100%;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--color-ink) 0 5px,
+    rgba(26, 18, 9, 0.65) 5px 10px
+  );
+  transition: width 0.12s linear;
+}
+
+.gauge-label {
+  margin-top: 0.55rem;
+  font-size: 0.8rem;
+  color: var(--color-faint);
+  text-align: center;
+  min-height: 1.2rem;
+}
+
+/* ---------- keyframes ---------- */
+
+@keyframes waxDrop {
+  0% {
+    transform: translateY(-170px) scale(1.75) rotate(-24deg);
+    opacity: 0;
+  }
+  62% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(-7.3deg);
+    opacity: 1;
+  }
+}
+
+@keyframes thud {
+  0%,
+  100% {
+    transform: rotate(-1.9deg) translateY(-4px);
+  }
+  35% {
+    transform: rotate(-2.4deg) translateY(1px) scale(0.994);
+  }
+  70% {
+    transform: rotate(-1.5deg) translateY(-6px);
+  }
+}
+
+@keyframes refuse {
+  0%,
+  100% {
+    transform: rotate(-1.9deg) translateX(0);
+  }
+  25% {
+    transform: rotate(-2.6deg) translateX(-7px);
+  }
+  75% {
+    transform: rotate(-1.1deg) translateX(7px);
+  }
+}
+
+@keyframes crackIn {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rise {
+  animation: riseIn 0.42s var(--ease-paper) both;
+}
+
+/* =====================================================================
+   bancada dos simuladores
+   ===================================================================== */
+
+.bench {
+  display: grid;
+  gap: clamp(1.6rem, 4vw, 3rem);
+  padding: clamp(2.5rem, 6vw, 4rem) 0;
+  border-top: 1.5px solid rgba(28, 20, 8, 0.14);
+  align-items: start;
+}
+
+.bench:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+/* sem isso o item de grid usa a largura minima do conteudo dele, e a fita
+   do tempo (que e larguissima por dentro) empurrava a pagina inteira */
+.bench > * {
+  min-width: 0;
+}
+
+@media (min-width: 900px) {
+  .bench {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  }
+
+  /* na bancada invertida as colunas trocam de tamanho junto com a ordem,
+     senao a bancada estreita fica com o simulador dentro */
+  .bench-flip {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  }
+
+  .bench-flip .bench-brief {
+    order: 2;
+  }
+}
+
+.bench-brief {
+  position: sticky;
+  top: 1.5rem;
+}
+
+.bench-num {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 2.3rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-hair);
+}
+
+/* ---------- rotores da enigma ---------- */
+
+.rotor {
+  width: 74px;
+  padding: 0.7rem 0;
+  text-align: center;
+  background: var(--color-paper-deep);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 8px 12px rgba(0, 0, 0, 0.14),
+    inset 0 -8px 12px rgba(0, 0, 0, 0.14);
+}
+
+.rotor b {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1.7rem;
+  line-height: 1;
+  transition: transform 0.17s var(--ease-paper);
+}
+
+.rotor small {
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--color-faint);
+}
+
+.lamps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 1rem;
+}
+
+.lamp {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border: 1.2px solid var(--color-hair);
+  border-radius: 50%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  color: var(--color-faint);
+  transition:
+    background 0.12s linear,
+    color 0.12s linear,
+    border-color 0.12s linear;
+}
+
+.lamp[data-on="true"] {
+  background: var(--color-wax);
+  border-color: var(--color-wax);
+  color: #fff6f0;
+  font-weight: 700;
+}
+
+/* ---------- barras de frequencia ---------- */
+
+.bars {
+  display: grid;
+  grid-template-columns: repeat(26, 1fr);
+  align-items: end;
+  gap: 2px;
+  height: 120px;
+}
+
+.bar {
+  background: var(--color-ink);
+  border-radius: 1px 1px 0 0;
+  min-height: 2px;
+}
+
+.bar[data-top="true"] {
+  background: var(--color-wax);
+}
+
+.barlabels {
+  display: grid;
+  grid-template-columns: repeat(26, 1fr);
+  gap: 2px;
+  margin-top: 3px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  color: var(--color-faint);
+  text-align: center;
+}
+
+.verdict {
+  margin: 0;
+  padding: 0.8rem 0.95rem;
+  border: 1.5px dashed var(--color-pen);
+  border-radius: 2px;
+  font-size: 0.95rem;
+}
+
+.verdict b {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ---------- bits do hash ---------- */
+
+.bits {
+  display: grid;
+  grid-template-columns: repeat(32, 1fr);
+  gap: 2px;
+}
+
+.bit {
+  aspect-ratio: 1;
+  /* token direto em vez de mistura com transparente: no escuro o bit
+     apagado precisa ser mais claro que o fundo, nao mais escuro */
+  background: var(--color-hair);
+  border-radius: 1px;
+  transition: background 0.18s var(--ease-paper);
+}
+
+.bit[data-one="true"] {
+  background: var(--color-ink);
+}
+
+.bit[data-flip="true"] {
+  background: var(--color-wax);
+}
+
+/* ---------- cofre ---------- */
+
+.vault-seal {
+  width: 92px;
+  height: 92px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.26), transparent 45%),
+    radial-gradient(circle at 70% 78%, rgba(0, 0, 0, 0.3), transparent 55%), var(--color-wax);
+  border: 1.5px solid var(--color-wax-deep);
+  border-radius: 47% 53% 44% 56% / 52% 46% 54% 48%;
+  color: rgba(70, 14, 8, 0.85);
+  transform: rotate(-7deg);
+  transition:
+    transform 0.55s var(--ease-paper),
+    opacity 0.55s var(--ease-paper);
+}
+
+.vault[data-open="true"] .vault-seal {
+  transform: rotate(-32deg) translateY(28px) scale(0.85);
+  opacity: 0;
+}
+
+.vault[data-wrong="true"] .vault-seal {
+  animation: refuse 0.45s var(--ease-paper) 2;
+}
+
+/* ---------- fita do tempo ---------- */
+
+.timeline {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 1.2rem 0 1.4rem;
+  cursor: grab;
+  scrollbar-width: thin;
+}
+
+.timeline:active {
+  cursor: grabbing;
+}
+
+.timeline-rail {
+  display: flex;
+  min-width: max-content;
+  padding-inline: 0.4rem;
+}
+
+.stop {
+  position: relative;
+  width: 186px;
+  flex-shrink: 0;
+  padding: 2.7rem 1rem 0 0;
+}
+
+.stop::before {
+  content: "";
+  position: absolute;
+  top: 21px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-hair);
+}
+
+.stop-seal {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  background: var(--color-wax);
+  border: 1.4px solid var(--color-wax-deep);
+  border-radius: 46% 54% 50% 50% / 52% 48% 52% 48%;
+  color: #fff6f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.6rem;
+  transform: rotate(var(--turn, -4deg));
+}
+
+.stop-year {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.stop p {
+  margin: 0.2rem 0 0;
+  font-size: 0.85rem;
+  color: var(--color-faint);
+  line-height: 1.45;
+}
+
+/* ---------- faixa de aviso ---------- */
+
+.warnbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  padding: clamp(0.8rem, 3vw, 1.4rem);
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  animation: warnUp 0.42s var(--ease-paper) both;
+}
+
+.warnbar-card {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  max-width: 780px;
+  padding: 1rem 1.2rem;
+  background: var(--color-card);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 2px rgba(28, 20, 8, 0.22),
+    3px 8px 14px rgba(28, 20, 8, 0.18),
+    8px 22px 40px rgba(28, 20, 8, 0.16);
+  transform: rotate(-0.4deg);
+}
+
+@keyframes warnUp {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .warnbar {
+    animation: none;
+  }
+}
+
+/* ---------- folha de caderno ---------- */
+
+.notebook {
+  position: relative;
+  background: var(--color-card);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 2px rgba(28, 20, 8, 0.18),
+    3px 8px 14px rgba(28, 20, 8, 0.12),
+    8px 22px 40px rgba(28, 20, 8, 0.1);
+  transform: rotate(-0.35deg);
+  overflow: hidden;
+}
+
+/* linha vermelha da margem e os furos do fichario */
+.notebook::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 54px;
+  width: 1.2px;
+  background: rgba(155, 36, 24, 0.35);
+}
+
+.notebook-holes {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 18px;
+  width: 18px;
+  background-image: radial-gradient(circle at 9px 9px, var(--color-paper) 0 7px, transparent 7px);
+  background-size: 18px 150px;
+  background-repeat: repeat-y;
+  background-position: 0 60px;
+}
+
+.notebook-holes::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle at 9px 9px,
+    transparent 0 6.2px,
+    rgba(28, 20, 8, 0.28) 6.2px 7.2px,
+    transparent 7.2px
+  );
+  background-size: 18px 150px;
+  background-repeat: repeat-y;
+  background-position: 0 60px;
+}
+
+@media (max-width: 767px) {
+  .notebook::before,
+  .notebook-holes {
+    display: none;
+  }
+}
+
+/* ---------- anatomia do arquivo ---------- */
+
+.anatomy {
+  display: grid;
+  gap: 0;
+  border: 1.5px solid var(--color-ink);
+  border-radius: 2px;
+  overflow: hidden;
+  transform: rotate(0.4deg);
+}
+
+.anatomy-row {
+  display: grid;
+  grid-template-columns: 5.4rem 5.4rem 1fr;
+  gap: 0.7rem;
+  align-items: baseline;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--color-hair);
+  font-size: 0.78rem;
+}
+
+.anatomy-row:last-child {
+  border-bottom: none;
+}
+
+/* os blocos de dado ficam com fundo pra separar do cabecalho do arquivo */
+.anatomy-row[data-block="true"] {
+  background: rgba(31, 74, 139, 0.06);
+}
+
+.anatomy-name {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.anatomy-size {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--color-pen);
+  font-size: 0.72rem;
+}
+
+.anatomy-note {
+  color: var(--color-faint);
+  line-height: 1.4;
+}
+
+@media (max-width: 560px) {
+  .anatomy-row {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+}
+
+/* ---------- pedacos de caderno na secao de passos ---------- */
+
+.note {
+  position: relative;
+  background: var(--color-card);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 2px rgba(28, 20, 8, 0.2),
+    3px 8px 14px rgba(28, 20, 8, 0.14);
+  transition: transform 0.22s var(--ease-paper);
+}
+
+.note:hover {
+  transform: translateY(-4px) rotate(var(--tilt, 0deg));
+}
+
+/* fita crepe segurando o papel. a borda irregular e o que tira a cara de
+   retangulo perfeito feito no css */
+.note::before {
+  content: "";
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  width: 86px;
+  height: 26px;
+  margin-left: -43px;
+  background: rgba(196, 178, 140, 0.42);
+  border-left: 1px solid rgba(122, 80, 16, 0.22);
+  border-right: 1px solid rgba(122, 80, 16, 0.22);
+  clip-path: polygon(
+    4% 12%,
+    22% 0,
+    48% 9%,
+    74% 1%,
+    96% 14%,
+    100% 86%,
+    78% 100%,
+    52% 90%,
+    26% 99%,
+    2% 88%
+  );
+  transform: rotate(var(--tape, -2deg));
+}
+
+/* ---------- estante de livros ---------- */
+
+.shelf {
+  padding-inline: 0.5rem;
+}
+
+/* o padding de cima existe pro livro que sai da estante nao ser cortado.
+   com overflow-x auto o navegador corta em cima tambem, entao a folga tem
+   que estar dentro da caixa */
+.shelf-row {
+  padding: 90px 10px 2px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+/* a fileira centraliza quando cabe e rola quando nao cabe. centralizar
+   direto no flex com overflow corta o comeco em tela pequena */
+.shelf-books {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  width: max-content;
+  margin-inline: auto;
+}
+
+.stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-left: 10px;
+  align-self: flex-end;
+}
+
+.stacked span {
+  display: block;
+  height: 34px;
+  border: 1.5px solid var(--color-ink);
+  border-radius: 2px;
+  box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.shelf-plank {
+  height: 14px;
+  background: linear-gradient(180deg, #4a3b2a, #3a2d1f);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 1px;
+  box-shadow:
+    0 6px 0 rgba(28, 20, 8, 0.12),
+    0 16px 26px rgba(28, 20, 8, 0.22);
+}
+
+.book {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 14px 0;
+  border: 1.5px solid var(--color-ink);
+  border-radius: 2px 2px 0 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  transform: rotate(var(--tilt, 0deg));
+  transform-origin: bottom center;
+  transition:
+    transform 0.26s var(--ease-drop),
+    box-shadow 0.26s var(--ease-paper);
+  box-shadow:
+    inset -6px 0 10px rgba(0, 0, 0, 0.22),
+    inset 3px 0 6px rgba(255, 255, 255, 0.12);
+}
+
+.book:hover {
+  transform: rotate(var(--tilt, 0deg)) translateY(-16px);
+}
+
+/* o livro escolhido sai da estante: sobe reto, como quem puxa de uma
+   fileira apertada, e so no fim tomba um pouco */
+.book[data-on="true"] {
+  transform: translateY(-72px) rotate(-2.5deg);
+  z-index: 3;
+  box-shadow:
+    inset -6px 0 10px rgba(0, 0, 0, 0.22),
+    inset 3px 0 6px rgba(255, 255, 255, 0.12),
+    8px 22px 30px rgba(28, 20, 8, 0.3);
+}
+
+/* os vizinhos caem pro buraco que sobrou */
+.book[data-gap="left"] {
+  transform: rotate(4deg);
+}
+
+.book[data-gap="right"] {
+  transform: rotate(-3.4deg);
+}
+
+/* as folhas aparecendo do lado direito da lombada */
+.book-edge {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  right: -5px;
+  width: 5px;
+  background: repeating-linear-gradient(180deg, #f4efe2 0 2px, rgba(122, 80, 16, 0.35) 2px 3px);
+  border: 1px solid rgba(28, 20, 8, 0.5);
+  border-left: none;
+  border-radius: 0 1px 1px 0;
+}
+
+.book-title {
+  writing-mode: vertical-rl;
+  font-weight: 700;
+  font-size: 0.86rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* as duas listrinhas de baixo da lombada, tipo colecao antiga */
+.book-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  height: 12px;
+  border-top: 1.2px solid currentColor;
+  border-bottom: 1.2px solid currentColor;
+  opacity: 0.45;
+}
+
+/* o livro aberto: duas paginas girando pra fora da lombada, como abrir um
+   livro de verdade em cima da mesa */
+.spread {
+  margin-top: 3rem;
+  display: grid;
+  gap: 0;
+  perspective: 2000px;
+  background: var(--color-card);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 2px rgba(28, 20, 8, 0.22),
+    3px 8px 14px rgba(28, 20, 8, 0.18),
+    8px 22px 40px rgba(28, 20, 8, 0.14);
+  animation: bookLand 0.4s var(--ease-paper) both;
+}
+
+@keyframes bookLand {
+  from {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.985);
+  }
+}
+
+@keyframes leafLeft {
+  from {
+    opacity: 0;
+    transform: rotateY(74deg);
+  }
+}
+
+@keyframes leafRight {
+  from {
+    opacity: 0;
+    transform: rotateY(-74deg);
+  }
+}
+
+.spread-page {
+  padding: clamp(1.5rem, 3vw, 2.8rem);
+  backface-visibility: hidden;
+}
+
+@media (min-width: 860px) {
+  .spread {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .spread-page + .spread-page {
+    border-left: 1.2px solid var(--color-hair);
+    box-shadow: inset 14px 0 22px rgba(28, 20, 8, 0.07);
+  }
+}
+
+.spread-page:first-child {
+  transform-origin: right center;
+  animation: leafLeft 0.62s var(--ease-paper) 0.1s both;
+}
+
+.spread-page:last-child {
+  transform-origin: left center;
+  animation: leafRight 0.62s var(--ease-paper) 0.16s both;
+}
+
+/* carimbo torto dizendo se da pra confiar ou nao */
+.stamp-mark {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  border: 2px solid var(--color-wax);
+  border-radius: 2px;
+  color: var(--color-wax);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transform: rotate(-3.4deg);
+  opacity: 0.85;
+}
+
+.stamp-mark[data-safe="true"] {
+  border-color: var(--color-pen);
+  color: var(--color-pen);
+  transform: rotate(2.1deg);
+}
+
+/* ---------- disco de cifra ---------- */
+
+.disc {
+  display: grid;
+  place-items: center;
+}
+
+.disc-inner {
+  transform-origin: 140px 140px;
+  animation: discSpin 72s linear infinite;
+}
+
+.disc:hover .disc-inner {
+  animation-play-state: paused;
+}
+
+@keyframes discSpin {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/* =====================================================================
+   a lupa da home. embaixo fica o quadro normal, em cima fica o mesmo
+   quadro redesenhado em 0 e 1. a lupa so recorta a camada de cima
+   ===================================================================== */
+
+.xray {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1.5px solid var(--color-ink);
+  border-radius: 2px;
+  background: var(--color-paper-deep);
+  box-shadow:
+    0 1px 2px rgba(28, 20, 8, 0.22),
+    3px 8px 14px rgba(28, 20, 8, 0.18),
+    8px 22px 40px rgba(28, 20, 8, 0.14);
+  cursor: none;
+  touch-action: none;
+}
+
+.xray-art,
+.xray-code {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.xray-art {
+  filter: saturate(0.86) contrast(1.04);
+}
+
+/* o recorte redondo e feito dentro do canvas, com clip. aqui em cima so
+   controla o aparecer e o sumir */
+.xray-code {
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-paper);
+}
+
+.xray[data-lens="true"] .xray-code {
+  opacity: 1;
+}
+
+/* o aro de vidro que segue o cursor */
+.xray-ring {
+  position: absolute;
+  left: var(--mx, 50%);
+  top: var(--my, 50%);
+  width: calc(var(--r, 120px) * 2);
+  height: calc(var(--r, 120px) * 2);
+  margin-left: calc(var(--r, 120px) * -1);
+  margin-top: calc(var(--r, 120px) * -1);
+  border-radius: 50%;
+  border: 2.5px solid rgba(26, 18, 9, 0.9);
+  box-shadow:
+    inset 0 0 24px rgba(255, 255, 255, 0.16),
+    inset 0 8px 30px rgba(255, 255, 255, 0.1),
+    0 10px 26px rgba(28, 20, 8, 0.35);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.82);
+  transition:
+    opacity 0.24s var(--ease-paper),
+    transform 0.32s var(--ease-drop);
+}
+
+.xray[data-lens="true"] .xray-ring {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* o cabo. sai da borda de baixo pra direita, com uma virola de metal
+   entre o aro e a madeira */
+.xray-ring::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 19px;
+  height: 86px;
+  margin-left: -9.5px;
+  transform-origin: 50% 0;
+  transform: rotate(45deg) translateY(calc(var(--r, 150px) - 6px));
+  background:
+    linear-gradient(180deg, #8e8b86 0 13px, transparent 13px),
+    linear-gradient(90deg, #120e08, #4a3928 42%, #2a2015 66%, #120e08);
+  border: 1.5px solid #0b0805;
+  border-radius: 2px 2px 9px 9px;
+  box-shadow: 0 8px 16px rgba(28, 20, 8, 0.4);
+}
+
+/* reflexo do vidro, aquele brilho torto em cima */
+.xray-ring::after {
+  content: "";
+  position: absolute;
+  left: 16%;
+  top: 12%;
+  width: 46%;
+  height: 26%;
+  border-radius: 50%;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0));
+  transform: rotate(-18deg);
+}
+
+.xray-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  padding: 0.3rem 0.7rem;
+  background: rgba(255, 254, 246, 0.9);
+  border: 1.2px solid var(--color-ink);
+  border-radius: 2px;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  transition: opacity 0.24s var(--ease-paper);
+}
+
+.xray[data-lens="true"] .xray-hint {
+  opacity: 0;
+}
+
+/* quem pediu menos movimento no sistema recebe menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .stage *,
+  .letter,
+  .paper,
+  .envelope,
+  .wax,
+  .wax-half,
+  .disc-inner,
+  .note,
+  .rise {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .stage[data-phase="fold"] .paper,
+  .stage[data-phase="sealed"] .paper {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* area de soltar arquivo quando o que veio nao serve */
+.dropzone[data-bad="true"] {
+  border-color: var(--color-wax);
+  background: color-mix(in srgb, var(--color-wax) 8%, var(--color-paper-deep));
+}
+
+/* ---------- menu do celular ---------- */
+
+.burger {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 34px;
+  padding: 0;
+  background: transparent;
+  border: 1.3px solid var(--color-hair);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.16s var(--ease-paper);
+}
+
+.burger:hover,
+.burger[aria-expanded="true"] {
+  border-color: var(--color-ink);
+}
+
+/* a gaveta cai por cima do conteudo, como um papel solto na frente */
+.drawer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 50;
+  background: var(--color-card);
+  border-bottom: 1.5px solid var(--color-ink);
+  box-shadow: 0 14px 26px rgba(28, 20, 8, 0.22);
+  animation: drawerDown 0.24s var(--ease-paper) both;
+}
+
+@keyframes drawerDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer {
+    animation: none;
+  }
+}
+
+/* sombra de papel some em fundo escuro, entao no escuro ela vira preta
+   de verdade e ganha um fio de luz na borda de cima */
+:root[data-theme="dark"] .sheet,
+:root[data-theme="dark"] .paper,
+:root[data-theme="dark"] .envelope,
+:root[data-theme="dark"] .notebook,
+:root[data-theme="dark"] .warnbar-card,
+:root[data-theme="dark"] .spread {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 250, 235, 0.06),
+    0 2px 4px rgba(0, 0, 0, 0.5),
+    6px 14px 28px rgba(0, 0, 0, 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .sheet,
+  :root:not([data-theme="light"]) .paper,
+  :root:not([data-theme="light"]) .envelope,
+  :root:not([data-theme="light"]) .notebook,
+  :root:not([data-theme="light"]) .warnbar-card,
+  :root:not([data-theme="light"]) .spread {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 250, 235, 0.06),
+      0 2px 4px rgba(0, 0, 0, 0.5),
+      6px 14px 28px rgba(0, 0, 0, 0.45);
+  }
+}
+
+/* ---------- acessibilidade ---------- */
+
+/* contorno de foco visivel pra quem navega no teclado. o padrao do
+   navegador some em varios elementos por causa do reset do tailwind */
+:focus-visible {
+  outline: 2.5px solid var(--color-pen);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* pular direto pro conteudo, primeiro item do tab. so aparece quando
+   recebe foco */
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  padding: 0.7rem 1.1rem;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  border-radius: 2px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: top 0.18s var(--ease-paper);
+}
+
+.skip:focus {
+  top: 1rem;
+}
+
+/* caixa de aviso: borda de cera pra separar do resto do papel */
+.warn-box {
+  padding: 1.5rem;
+  background: var(--color-card);
+  border: 1.5px solid var(--color-wax);
+  border-radius: 2px;
+  box-shadow: 3px 5px 0 rgba(155, 36, 24, 0.16);
+  transform: rotate(0.5deg);
+}
+
+.warn-box h2 {
+  color: var(--color-wax);
+}
+
+/* pontinho de pagina do caderno */
+.page-dot {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 1.3px solid var(--color-ink);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.16s var(--ease-paper);
+}
+
+.page-dot[data-on="true"] {
+  background: var(--color-ink);
+}
+
+/* a pagina do caderno vira como papel: entra girando de leve pela lateral */
+@keyframes pageTurn {
+  from {
+    opacity: 0;
+    transform: perspective(1400px) rotateY(-14deg) translateX(-26px);
+  }
+}
+
+.page-turn {
+  transform-origin: left center;
+  animation: pageTurn 0.42s var(--ease-paper) both;
+}
+
+.page-turn[data-way="back"] {
+  transform-origin: right center;
+  animation-name: pageTurnBack;
+}
+
+@keyframes pageTurnBack {
+  from {
+    opacity: 0;
+    transform: perspective(1400px) rotateY(14deg) translateX(26px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-turn {
+    animation: none;
+  }
+}
+
+/* atalho no canto da pagina do guia */
+.guide-cta {
+  box-shadow: 2px 3px 0 rgba(28, 20, 8, 0.7);
+}
+
+/* explicacao da cifra escolhida, presa por uma barra de cera na lateral */
+.method-note {
+  padding: 0.75rem 0 0.75rem 0.9rem;
+  border-left: 3px solid var(--color-wax);
+  animation: riseIn 0.28s var(--ease-paper) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .method-note {
+    animation: none;
+  }
+}
+
+/* no celular o caderno e estreito e o deslocamento da virada bate na borda,
+   entao a pagina so aparece, sem escorregar pro lado */
+@media (max-width: 640px) {
+  @keyframes pageTurn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  @keyframes pageTurnBack {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+}
+
+/* rotulo das especificacoes da area de soltar arquivo */
+.drop-spec {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+/* o "como usar" de cada simulador, marcado com o azul da caneta */
+.bench-tip {
+  margin: 1.6rem 0 0;
+  padding: 0.85rem 1rem;
+  max-width: 56ch;
+  border-left: 3px solid var(--color-pen);
+  background: var(--color-paper-deep);
+  border-radius: 0 2px 2px 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* aviso do que muda com e sem senha. azul quando esta trancado de verdade,
+   cera quando qualquer um consegue ler */
+.lock-note {
+  margin: 0.9rem 0 0;
+  padding: 0.6rem 0.85rem;
+  border-left: 3px solid var(--color-pen);
+  background: var(--color-paper-deep);
+  border-radius: 0 2px 2px 0;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.lock-note--open {
+  border-left-color: var(--color-wax);
+}
