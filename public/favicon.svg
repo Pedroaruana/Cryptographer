@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="cera" cx="34%" cy="28%" r="72%">
+      <stop offset="0%" stop-color="#c4402f"/>
+      <stop offset="55%" stop-color="#9b2418"/>
+      <stop offset="100%" stop-color="#6f1810"/>
+    </radialGradient>
+  </defs>
+  <path
+    d="M32 3c9 0 16 4 20 10s7 12 7 19-3 15-9 20-13 9-20 9-14-3-19-8S3 40 3 32s2-15 7-20S23 3 32 3Z"
+    fill="url(#cera)" stroke="#5e1409" stroke-width="2.5"/>
+  <g fill="#f9e7df">
+    <circle cx="32" cy="27" r="10"/>
+    <path d="M28 34 L23 53 h18 l-5 -19 Z"/>
+  </g>
+</svg>
