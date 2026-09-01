@@ -422,7 +422,10 @@ export const en = {
     accepts: 'Takes:',
     limit: 'Limit:',
     anyFile: 'any file, of any type',
-    mismatch: 'The two passwords are different.'
+    mismatch: 'The two passwords are different.',
+    needFile: 'Pick a file first.',
+    needText: 'Write the text first.',
+    needPassword: 'The password is missing.'
   },
 
   methods: {
