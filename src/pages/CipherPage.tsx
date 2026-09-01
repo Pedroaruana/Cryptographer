@@ -7,6 +7,7 @@ import { useCipher } from '../hooks/useCipher'
 import { useLang } from '../i18n/context'
 import { NEEDS_KEY, type MethodId } from '../crypto/classic'
 import { ALGO_AES_GCM_ARGON2, EXTENSION, MAX_FILE_BYTES } from '../crypto/format'
+import { matchesAccept } from '../lib/fileTypes'
 
 type Mode = 'encrypt' | 'decrypt'
 type Tab = 'file' | 'text'
@@ -84,6 +85,18 @@ export const CipherPage = ({ mode }: { mode: Mode }) => {
     setConfirm('')
   }
 
+  // antes isso limpava o arquivo sempre, e no modo de lacrar apagava sem
+  // avisar o arquivo que a pessoa tinha acabado de escolher: o botao ficava
+  // cinza e nao dava pra saber por que
+  const pickOutput = (zip: boolean) => {
+    setArchiveMode(zip)
+
+    const accept = mode === 'decrypt' ? (zip ? '.zip' : EXTENSION) : undefined
+    if (file && !matchesAccept(file, accept)) setFile(null)
+
+    reset()
+  }
+
   const stageLabel = tab === 'file' ? (file?.name ?? copy.drop) : copy.tabText
 
   const errorText = errorCode
@@ -91,6 +104,18 @@ export const CipherPage = ({ mode }: { mode: Mode }) => {
     : null
 
   const busy = status === 'working'
+
+  // o botao cinza sem explicacao fazia a pessoa achar que era bug do site
+  const missing =
+    ready || busy
+      ? null
+      : tab === 'file' && !file
+        ? t.form.needFile
+        : tab === 'text' && !text.trim()
+          ? t.form.needText
+          : needsKey && !password
+            ? t.form.needPassword
+            : null
 
   return (
     <section className="wrap py-14">
@@ -192,11 +217,7 @@ export const CipherPage = ({ mode }: { mode: Mode }) => {
                     className="chip"
                     data-on={!archiveMode}
                     disabled={busy}
-                    onClick={() => {
-                      setArchiveMode(false)
-                      setFile(null)
-                      reset()
-                    }}
+                    onClick={() => pickOutput(false)}
                   >
                     {t.archive.cgph}
                     <span className="opacity-70 text-[0.72rem]">{t.archive.cgphNote}</span>
@@ -207,11 +228,7 @@ export const CipherPage = ({ mode }: { mode: Mode }) => {
                     className="chip"
                     data-on={archiveMode}
                     disabled={busy}
-                    onClick={() => {
-                      setArchiveMode(true)
-                      setFile(null)
-                      reset()
-                    }}
+                    onClick={() => pickOutput(true)}
                   >
                     {t.archive.zip}
                     <span className="opacity-70 text-[0.72rem]">{t.archive.zipNote}</span>
@@ -248,6 +265,8 @@ export const CipherPage = ({ mode }: { mode: Mode }) => {
               </button>
             )}
           </div>
+
+          {missing && <p className="m-0 mt-3 text-[0.82rem] text-faint">{missing}</p>}
         </div>
 
         <div className="lg:pt-6">

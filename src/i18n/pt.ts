@@ -423,7 +423,10 @@ export const pt: Dict = {
     accepts: 'Aceita:',
     limit: 'Limite:',
     anyFile: 'qualquer arquivo, de qualquer tipo',
-    mismatch: 'As duas senhas estão diferentes.'
+    mismatch: 'As duas senhas estão diferentes.',
+    needFile: 'Falta escolher o arquivo.',
+    needText: 'Falta escrever o texto.',
+    needPassword: 'Falta a senha.'
   },
 
   methods: {
