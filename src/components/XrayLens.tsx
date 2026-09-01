@@ -128,6 +128,14 @@ export const XrayLens = ({ src, alt, hint, token, radius = 150 }: Props) => {
   const [lensOn, setLensOn] = useState(false)
   const [artOk, setArtOk] = useState(true)
 
+  // no celular a lupa de 150px era quase a largura inteira do quadro e metade
+  // dela vivia pra fora da moldura. entao o raio encolhe junto com a moldura
+  const [lens, setLens] = useState(radius)
+
+  const [canHover] = useState(
+    () => typeof window === 'undefined' || window.matchMedia('(hover: hover)').matches
+  )
+
   // o recorte redondo e feito aqui dentro, com clip no canvas. tentei antes
   // com mask no css e o navegador ladrilhava a mascara pela imagem inteira
   const draw = useCallback(() => {
@@ -153,7 +161,7 @@ export const XrayLens = ({ src, alt, hint, token, radius = 150 }: Props) => {
 
     ctx.save()
     ctx.beginPath()
-    ctx.arc(x, y, radius, 0, Math.PI * 2)
+    ctx.arc(x, y, lens, 0, Math.PI * 2)
     ctx.clip()
 
     // aumenta em volta do ponto onde a lupa esta, senao nao parece lente,
@@ -163,7 +171,7 @@ export const XrayLens = ({ src, alt, hint, token, radius = 150 }: Props) => {
     ctx.translate(-x, -y)
     ctx.drawImage(sheet, 0, 0, width, height)
     ctx.restore()
-  }, [lensOn, radius])
+  }, [lensOn, lens])
 
   const rebuild = useCallback(() => {
     const box = boxRef.current
@@ -173,6 +181,8 @@ export const XrayLens = ({ src, alt, hint, token, radius = 150 }: Props) => {
     const width = box.clientWidth
     const height = box.clientHeight
     if (!width || !height) return
+
+    setLens(Math.max(80, Math.min(radius, Math.round(width * 0.34))))
 
     const dpr = Math.min(2, window.devicePixelRatio || 1)
 
@@ -194,7 +204,7 @@ export const XrayLens = ({ src, alt, hint, token, radius = 150 }: Props) => {
     if (!spotRef.current.x) spotRef.current = { x: width / 2, y: height / 2 }
 
     draw()
-  }, [draw, token])
+  }, [draw, radius, token])
 
   useEffect(() => {
     rebuild()
@@ -241,21 +251,29 @@ export const XrayLens = ({ src, alt, hint, token, radius = 150 }: Props) => {
 
   // no celular nao existe passar o mouse, entao a lupa anda sozinha
   useEffect(() => {
-    const canHover = window.matchMedia('(hover: hover)').matches
-    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (canHover || calm) return
+    if (canHover) return
 
     const box = boxRef.current
     if (!box) return
 
     setLensOn(true)
+
+    // quem pediu menos movimento no sistema ve a lupa parada no meio
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      move(box.clientWidth / 2, box.clientHeight / 2)
+      return
+    }
+
+    // o passeio so vai ate onde a lupa inteira ainda cabe dentro do quadro
+    const roomX = Math.max(0, box.clientWidth / 2 - lens * 1.1)
+    const roomY = Math.max(0, box.clientHeight / 2 - lens * 1.1)
     const started = performance.now()
 
     const step = (now: number) => {
       const time = (now - started) / 1000
       move(
-        box.clientWidth * (0.5 + 0.28 * Math.sin(time * 0.6)),
-        box.clientHeight * (0.5 + 0.22 * Math.sin(time * 0.9))
+        box.clientWidth / 2 + roomX * Math.sin(time * 0.6),
+        box.clientHeight / 2 + roomY * Math.sin(time * 0.9)
       )
       driftRef.current = requestAnimationFrame(step)
     }
@@ -263,7 +281,7 @@ export const XrayLens = ({ src, alt, hint, token, radius = 150 }: Props) => {
     driftRef.current = requestAnimationFrame(step)
 
     return () => cancelAnimationFrame(driftRef.current)
-  }, [move])
+  }, [canHover, lens, move])
 
   const onPointer = (event: React.PointerEvent<HTMLDivElement>) => {
     const box = boxRef.current
@@ -278,16 +296,23 @@ export const XrayLens = ({ src, alt, hint, token, radius = 150 }: Props) => {
       ref={boxRef}
       className="xray"
       data-lens={lensOn}
-      style={{ ['--r' as string]: `${radius}px` }}
+      style={{ ['--r' as string]: `${lens}px` }}
       onPointerMove={(event) => {
+        // no toque quem manda e o passeio automatico. deixar o dedo mexer
+        // apagava a lupa assim que a pessoa tirava a mao da tela
+        if (!canHover) return
         setLensOn(true)
         onPointer(event)
       }}
       onPointerDown={(event) => {
+        if (!canHover) return
         setLensOn(true)
         onPointer(event)
       }}
-      onPointerLeave={() => setLensOn(false)}
+      onPointerLeave={() => {
+        if (!canHover) return
+        setLensOn(false)
+      }}
     >
       <img
         ref={imageRef}
