@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cryptographer-seven.vercel.app/sitemap.xml
