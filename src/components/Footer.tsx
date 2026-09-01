@@ -20,7 +20,7 @@ export const Footer = () => {
             {t.footer.cookies}
           </Link>
           <a
-            href="https://github.com/"
+            href="https://github.com/Pedroaruana/Cryptographer"
             target="_blank"
             rel="noreferrer"
             className="scribble text-ink"

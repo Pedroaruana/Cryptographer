@@ -1433,7 +1433,9 @@ body {
     3px 8px 14px rgba(28, 20, 8, 0.18),
     8px 22px 40px rgba(28, 20, 8, 0.14);
   cursor: none;
-  touch-action: none;
+  /* pan-y e nao none: com none o dedo parava na moldura e a pagina
+     nao rolava mais no celular */
+  touch-action: pan-y;
 }
 
 .xray-art,
