@@ -45,8 +45,11 @@ const firstGuess = (): Lang => {
   return navigator.language?.toLowerCase().startsWith('pt') ? 'pt' : 'en'
 }
 
-export const LangProvider = ({ children }: { children: ReactNode }) => {
-  const [lang, setLangState] = useState<Lang>(firstGuess)
+// o inicial existe pro gerador de html estatico mandar o idioma na mao. o node
+// tambem tem navigator, entao adivinhar pelo ambiente dava ingles no servidor
+// do CI e portugues aqui na minha maquina
+export const LangProvider = ({ children, inicial }: { children: ReactNode; inicial?: Lang }) => {
+  const [lang, setLangState] = useState<Lang>(inicial ?? firstGuess)
 
   useEffect(() => {
     writeSaved(lang)

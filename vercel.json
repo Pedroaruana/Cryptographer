@@ -50,6 +50,42 @@
   ],
   "rewrites": [
     {
+      "source": "/encrypt",
+      "destination": "/encrypt.html"
+    },
+    {
+      "source": "/decrypt",
+      "destination": "/decrypt.html"
+    },
+    {
+      "source": "/esconder",
+      "destination": "/esconder.html"
+    },
+    {
+      "source": "/metadados",
+      "destination": "/metadados.html"
+    },
+    {
+      "source": "/hash",
+      "destination": "/hash.html"
+    },
+    {
+      "source": "/simuladores",
+      "destination": "/simuladores.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms.html"
+    },
+    {
+      "source": "/cookies",
+      "destination": "/cookies.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

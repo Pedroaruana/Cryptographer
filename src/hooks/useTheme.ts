@@ -5,6 +5,10 @@ export type Theme = 'light' | 'dark'
 const KEY = 'cryptographer:theme'
 
 const firstGuess = (): Theme => {
+  // na geracao do html estatico nao existe navegador. o css ja segue o
+  // prefers-color-scheme sozinho, entao claro aqui nao prende ninguem
+  if (typeof window === 'undefined') return 'light'
+
   try {
     const saved = localStorage.getItem(KEY)
     if (saved === 'light' || saved === 'dark') return saved
