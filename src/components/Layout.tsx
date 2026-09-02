@@ -4,7 +4,7 @@ import { Header } from './Header'
 import { Footer } from './Footer'
 import { WarningBar } from './WarningBar'
 import { useLang } from '../i18n/context'
-import { aplicarSeo, chaveDaRota, fichaDoSite } from '../lib/seo'
+import { aplicarSeo, montarSeo } from '../lib/seo'
 
 export const Layout = () => {
   const { t, lang } = useLang()
@@ -13,19 +13,7 @@ export const Layout = () => {
   // titulo, descricao e endereco oficial de cada tela. antes as dez rotas
   // serviam o mesmo cabecalho, entao pro buscador so a home existia
   useEffect(() => {
-    const chave = chaveDaRota(pathname)
-    const pagina = t.seo[chave]
-
-    aplicarSeo({
-      pathname,
-      lang,
-      title: chave === 'home' ? pagina.title : `${pagina.title} | Cryptographer`,
-      description: pagina.description,
-      ficha:
-        chave === 'home'
-          ? fichaDoSite('Cryptographer', pagina.description, t.seo.features)
-          : undefined
-    })
+    aplicarSeo(montarSeo({ pathname, lang, t }))
   }, [lang, pathname, t])
 
   // trocando de pagina eu volto pro topo. sem isso a pessoa cai no meio

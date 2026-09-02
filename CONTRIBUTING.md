@@ -66,6 +66,17 @@ Sem assinatura de ferramenta, sem `Co-Authored-By`, sem emoji.
 Issue para bug de verdade e funcionalidade de verdade. Não para ajustar
 padding. O PR referencia com `Closes #12`, e o merge fecha a issue sozinho.
 
+## O build gera html estatico
+
+`npm run build` faz três coisas: compila o site, compila o `src/entry-server.tsx`
+num pacote que roda no node, e o `scripts/prerender.mjs` usa esse pacote pra
+desenhar as dez telas em texto e gravar um `.html` pronto pra cada endereço.
+
+É por isso que as rotas moram soltas em `Rotas`, fora do `BrowserRouter`: o
+gerador monta elas com o `StaticRouter`, que não depende da barra de endereço.
+Nada que roda durante o render pode encostar em `window`, `document` ou
+`localStorage` sem checar antes se eles existem, senão o build quebra.
+
 ## Os dois tipos de teste
 
 `npm test` roda o Vitest em cima do núcleo: formato do arquivo, cifras, hash,

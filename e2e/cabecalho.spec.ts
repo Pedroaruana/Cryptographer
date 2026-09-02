@@ -4,16 +4,44 @@ import { abrir } from './ajuda'
 const SITE = 'https://cryptographer-seven.vercel.app'
 
 const TELAS = [
-  { rota: '/', titulo: /^Cryptographer, criptografia/ },
-  { rota: '/encrypt', titulo: /^Criptografar arquivo com senha \| Cryptographer$/ },
-  { rota: '/decrypt', titulo: /^Descriptografar arquivo \.cgph \| Cryptographer$/ },
-  { rota: '/esconder', titulo: /^Esconder senha dentro de foto ou áudio \| Cryptographer$/ },
-  { rota: '/metadados', titulo: /metadados EXIF da foto \| Cryptographer$/ },
-  { rota: '/hash', titulo: /^Calcular o hash SHA-256 de um arquivo \| Cryptographer$/ },
-  { rota: '/simuladores', titulo: /^Simuladores de cifras clássicas \| Cryptographer$/ },
-  { rota: '/privacy', titulo: /^Política de privacidade \| Cryptographer$/ },
-  { rota: '/terms', titulo: /^Termos de uso \| Cryptographer$/ },
-  { rota: '/cookies', titulo: /^Cookies \| Cryptographer$/ }
+  { rota: '/', titulo: /^Cryptographer, criptografia/, marca: 'como se tranca' },
+  {
+    rota: '/encrypt',
+    titulo: /^Criptografar arquivo com senha \| Cryptographer$/,
+    marca: 'Tranca isso.'
+  },
+  {
+    rota: '/decrypt',
+    titulo: /^Descriptografar arquivo \.cgph \| Cryptographer$/,
+    marca: 'Quebra o lacre.'
+  },
+  {
+    rota: '/esconder',
+    titulo: /^Esconder senha dentro de foto ou áudio \| Cryptographer$/,
+    marca: 'segredo dentro de uma foto'
+  },
+  {
+    rota: '/metadados',
+    titulo: /metadados EXIF da foto \| Cryptographer$/,
+    marca: 'Metadados'
+  },
+  {
+    rota: '/hash',
+    titulo: /^Calcular o hash SHA-256 de um arquivo \| Cryptographer$/,
+    marca: 'Prove que nada mudou.'
+  },
+  {
+    rota: '/simuladores',
+    titulo: /^Simuladores de cifras clássicas \| Cryptographer$/,
+    marca: 'César'
+  },
+  {
+    rota: '/privacy',
+    titulo: /^Política de privacidade \| Cryptographer$/,
+    marca: 'Privacidade'
+  },
+  { rota: '/terms', titulo: /^Termos de uso \| Cryptographer$/, marca: 'Termos' },
+  { rota: '/cookies', titulo: /^Cookies \| Cryptographer$/, marca: 'Cookies' }
 ]
 
 const ler = (page: import('@playwright/test').Page, seletor: string, campo = 'content') =>
@@ -78,4 +106,28 @@ test('o cabecalho acompanha a troca de idioma', async ({ page }) => {
   await expect(page).toHaveTitle(/^Hide a password inside a photo/)
   expect(await ler(page, 'meta[property="og:locale"]')).toBe('en_US')
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+})
+
+// o robo que nao roda javascript so ve isso. antes ele recebia uma div vazia
+test('o html que sai do servidor ja vem com a tela desenhada', async ({ request }) => {
+  for (const tela of TELAS) {
+    const html = await (await request.get(tela.rota)).text()
+
+    expect(html, `${tela.rota} veio com a div vazia`).not.toContain('<div id="root"></div>')
+    expect(html.match(/<title>([^<]*)<\/title>/)?.[1], `titulo de ${tela.rota}`).toMatch(
+      tela.titulo
+    )
+    expect(html, `canonical de ${tela.rota}`).toContain(
+      `rel="canonical" href="${SITE}${tela.rota}"`
+    )
+    expect(html, `texto de ${tela.rota}`).toContain(tela.marca)
+  }
+})
+
+test('o html estatico nao trava o tema no claro', async ({ request }) => {
+  const html = await (await request.get('/')).text()
+
+  // se o data-theme viesse escrito no arquivo, quem usa o tema escuro veria
+  // um piscar branco antes do javascript subir
+  expect(html).not.toContain('data-theme')
 })
