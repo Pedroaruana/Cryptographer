@@ -1,0 +1,22 @@
+# Cryptographer
+
+> Um site de criptografia que roda inteiro dentro do navegador. Nenhum arquivo,
+> nenhuma senha e nenhum texto sai da máquina de quem está usando: não existe
+> servidor, banco de dados, conta nem login. A política de segurança da página
+> declara connect-src 'self', então o próprio navegador impede qualquer envio.
+
+## Telas
+
+- [Início](https://cryptographer-seven.vercel.app/): o que o site faz e como funciona por dentro
+- [Criptografar](https://cryptographer-seven.vercel.app/encrypt): tranca um arquivo ou uma mensagem com AES-256-GCM, chave derivada da senha com PBKDF2 ou Argon2id. Sai um arquivo .cgph ou um .zip com senha
+- [Descriptografar](https://cryptographer-seven.vercel.app/decrypt): abre de volta o que foi trancado, com a mesma senha
+- [Esconder](https://cryptographer-seven.vercel.app/esconder): põe um segredo dentro dos pixels de uma imagem ou das amostras de um WAV, e tira de lá depois. Formato com perda, como JPEG e MP3, não serve
+- [Metadados](https://cryptographer-seven.vercel.app/metadados): mostra o que a sua foto entrega sem você saber, câmera, data e coordenada de GPS, e limpa isso
+- [Impressão digital](https://cryptographer-seven.vercel.app/hash): tira o hash SHA-1, SHA-256, SHA-384 ou SHA-512 de um arquivo ou texto e compara com um valor esperado
+- [Simuladores](https://cryptographer-seven.vercel.app/simuladores): as cifras clássicas funcionando passo a passo, com o aviso de que nenhuma delas protege nada hoje
+
+## Avisos
+
+- Não existe recuperar senha. Se a senha se perde, o arquivo se perde junto
+- As cifras clássicas estão ali para ensinar, não para proteger
+- O código é aberto: https://github.com/Pedroaruana/Cryptographer
