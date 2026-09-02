@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // os testes de ponta a ponta rodam no node, nao no navegador. tipo eles
+    // num arquivo separado pra nao misturar os tipos do node com os do site
+    "types": ["node"]
+  },
+  "include": ["e2e", "playwright.config.ts"]
+}

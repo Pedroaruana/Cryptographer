@@ -18,12 +18,14 @@ sou eu sozinho revisando.
 git checkout -b feat/nome-curto
 # escreve o código
 npm run lint && npm test && npm run build
+npm run test:e2e   # sobe o site e clica nele, precisa do navegador instalado
 git commit -m "feat: what changed in english"
 git push -u origin feat/nome-curto
 ```
 
-Depois abre o PR no GitHub, espera a CI ficar verde e faz merge com **squash**,
-para a `main` ficar com um commit por funcionalidade.
+Depois abre o PR no GitHub, espera a CI ficar verde e faz merge com **rebase**.
+Nunca com squash: squash reescreve a data de autoria do commit, e aqui a data
+de cada commit é escolhida de propósito.
 
 ## Nome de branch
 
@@ -64,10 +66,26 @@ Sem assinatura de ferramenta, sem `Co-Authored-By`, sem emoji.
 Issue para bug de verdade e funcionalidade de verdade. Não para ajustar
 padding. O PR referencia com `Closes #12`, e o merge fecha a issue sozinho.
 
+## Os dois tipos de teste
+
+`npm test` roda o Vitest em cima do núcleo: formato do arquivo, cifras, hash,
+esteganografia, metadados. É rápido e não abre navegador nenhum.
+
+`npm run test:e2e` roda o Playwright, que faz o build, sobe o site e clica nele
+de verdade: lacra um arquivo e abre de volta conferindo byte por byte, recusa
+senha errada, esconde e tira segredo da foto, e confere o menu no celular. Da
+primeira vez precisa de `npx playwright install chromium`.
+
+Teste de tela que passa tanto com o código certo quanto com o errado não serve
+de nada. Antes de dar um por pronto, quebra a correção de propósito e confere
+que ele acusa.
+
 ## O que a CI cobra
 
-`npm run lint`, `npx tsc --noEmit`, `npm test` e `npm run build`. Se qualquer
-um falhar, o PR não entra.
+`npm run lint`, `npx tsc --noEmit`, o mesmo para o `tsconfig.e2e.json`,
+`npm test`, `npm run build` e `npm run test:e2e`. Se qualquer um falhar, o PR
+não entra. Os testes de tela rodam num job separado porque baixam um navegador
+inteiro e demoram bem mais.
 
 ## Antes de dizer que terminou
 

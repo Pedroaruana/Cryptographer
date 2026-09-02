@@ -9,6 +9,7 @@ Closes #
 
 - [ ] `npm run lint` sem erro
 - [ ] `npm test` passando
+- [ ] `npm run test:e2e` passando
 - [ ] `npm run build` passando
 - [ ] Testado no celular, sem rolagem lateral
 - [ ] Textos atualizados em português e inglês
