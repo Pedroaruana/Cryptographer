@@ -77,6 +77,19 @@ gerador monta elas com o `StaticRouter`, que não depende da barra de endereço.
 Nada que roda durante o render pode encostar em `window`, `document` ou
 `localStorage` sem checar antes se eles existem, senão o build quebra.
 
+## O site abre sem internet
+
+`scripts/gerar-sw.mjs` roda no fim do build e escreve o `dist/sw.js` com a lista
+exata dos arquivos gerados, que levam o hash do conteúdo no nome. A home promete
+"funciona offline", e `e2e/offline.spec.ts` desliga a rede e confere. Se mexer no
+service worker, esse teste é o que segura a promessa.
+
+## Os desenhos do README
+
+Os dois diagramas não são figura solta: saem de `node scripts/diagramas.mjs`, que
+desenha eles na mesma paleta e na mesma letra do site. Mudou o formato do
+arquivo, roda de novo em vez de editar imagem na mão.
+
 ## Os dois tipos de teste
 
 `npm test` roda o Vitest em cima do núcleo: formato do arquivo, cifras, hash,

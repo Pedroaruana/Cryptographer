@@ -26,3 +26,11 @@ export const baixar = async (page: Page, nomeDoBotao: RegExp) => {
 
   return { nome: download.suggestedFilename(), bytes: Buffer.concat(pedacos) }
 }
+
+// o html estatico nao tem data-theme de proposito, quem escreve esse atributo e
+// um efeito do react. entao ele so aparece quando o site esta de pe pra valer,
+// e nao so desenhado na tela
+export const esperarReact = (page: Page) =>
+  page.waitForFunction(() => Boolean(document.documentElement.dataset.theme), null, {
+    timeout: 20_000
+  })
