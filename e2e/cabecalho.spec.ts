@@ -131,3 +131,19 @@ test('o html estatico nao trava o tema no claro', async ({ request }) => {
   // um piscar branco antes do javascript subir
   expect(html).not.toContain('data-theme')
 })
+
+// sem isso o link no whatsapp e no linkedin aparece sem figura nenhuma
+test('o link compartilhado leva uma imagem junto', async ({ request, page }) => {
+  const html = await (await request.get('/encrypt')).text()
+
+  expect(html).toContain(`content="${SITE}/og.png"`)
+  expect(html).toContain('content="summary_large_image"')
+
+  const imagem = await request.get('/og.png')
+
+  expect(imagem.ok()).toBe(true)
+  expect(imagem.headers()['content-type']).toBe('image/png')
+
+  await abrir(page, '/hash')
+  expect(await ler(page, 'meta[property="og:image"]')).toBe(`${SITE}/og.png`)
+})
