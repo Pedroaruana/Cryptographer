@@ -404,6 +404,70 @@ export const pt: Dict = {
     again: 'Abrir outro'
   },
 
+  seo: {
+    home: {
+      title: 'Cryptographer, criptografia que roda dentro do seu navegador',
+      description:
+        'Tranque arquivos com senha, esconda segredos dentro de fotos e áudio, veja o que suas fotos entregam e tire a impressão digital de um arquivo. Nada sai do seu navegador.'
+    },
+    encrypt: {
+      title: 'Criptografar arquivo com senha',
+      description:
+        'Tranque qualquer arquivo ou mensagem com AES-256-GCM e uma senha sua. Sai um .cgph ou um .zip que abre no 7-Zip. Sem envio, sem conta, sem servidor.'
+    },
+    decrypt: {
+      title: 'Descriptografar arquivo .cgph',
+      description:
+        'Traga de volta um arquivo ou uma mensagem que foi trancada aqui, usando a mesma senha. Tudo acontece dentro do navegador, o arquivo nunca é enviado.'
+    },
+    hide: {
+      title: 'Esconder senha dentro de foto ou áudio',
+      description:
+        'Esteganografia no navegador: põe um segredo nos pixels de um PNG ou nas amostras de um WAV, e tira de lá depois. A foto continua abrindo normal em qualquer programa.'
+    },
+    metadata: {
+      title: 'Ver e limpar os metadados EXIF da foto',
+      description:
+        'Descubra o que a sua foto entrega sem você saber, câmera, data e até a coordenada de GPS de onde foi tirada, e apague isso antes de mandar pra alguém.'
+    },
+    hash: {
+      title: 'Calcular o hash SHA-256 de um arquivo',
+      description:
+        'Tire a impressão digital SHA-1, SHA-256, SHA-384 ou SHA-512 de um arquivo ou texto e compare com o valor esperado pra provar que nada foi alterado no caminho.'
+    },
+    lab: {
+      title: 'Simuladores de cifras clássicas',
+      description:
+        'César, Vigenère, Enigma e outras cifras funcionando passo a passo na tela, pra entender como cada uma embaralha o texto e por que nenhuma delas protege nada hoje.'
+    },
+    privacy: {
+      title: 'Política de privacidade',
+      description:
+        'O que o site faz com os seus dados: nada. Não existe servidor, banco de dados nem conta, e nenhum arquivo ou senha sai do seu navegador.'
+    },
+    terms: {
+      title: 'Termos de uso',
+      description: 'As regras de uso do Cryptographer e os limites do que ele promete.'
+    },
+    cookies: {
+      title: 'Cookies',
+      description:
+        'Quais cookies o site usa e por quê. Só o necessário pra lembrar o idioma e o tema que você escolheu.'
+    },
+    notFound: {
+      title: 'Página não encontrada',
+      description: 'Esse endereço não existe aqui.'
+    },
+    features: [
+      'Criptografar arquivos com AES-256-GCM',
+      'ZIP com senha AES-256',
+      'Esconder segredos em imagem e áudio',
+      'Ler e limpar metadados EXIF',
+      'Calcular hash SHA-1, SHA-256, SHA-384 e SHA-512',
+      'Simuladores de cifras clássicas'
+    ]
+  },
+
   form: {
     password: 'Senha',
     passwordPlaceholder: 'aquela que você vai lembrar',

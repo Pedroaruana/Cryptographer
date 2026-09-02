@@ -403,6 +403,70 @@ export const en = {
     again: 'Open another one'
   },
 
+  seo: {
+    home: {
+      title: 'Cryptographer, encryption that runs inside your browser',
+      description:
+        'Lock files with a password, hide secrets inside photos and audio, see what your photos give away, and fingerprint a file. Nothing ever leaves your browser.'
+    },
+    encrypt: {
+      title: 'Encrypt a file with a password',
+      description:
+        'Lock any file or message with AES-256-GCM and a password of your own. You get a .cgph or a .zip that opens in 7-Zip. No upload, no account, no server.'
+    },
+    decrypt: {
+      title: 'Decrypt a .cgph file',
+      description:
+        'Bring back a file or a message that was locked here, using the same password. It all happens inside the browser, the file is never uploaded.'
+    },
+    hide: {
+      title: 'Hide a password inside a photo or audio file',
+      description:
+        'Steganography in the browser: put a secret into the pixels of a PNG or the samples of a WAV, and pull it back out later. The photo still opens normally anywhere.'
+    },
+    metadata: {
+      title: 'Read and strip EXIF metadata from a photo',
+      description:
+        'Find out what your photo gives away without you knowing, camera, date and even the GPS coordinate where it was taken, and erase that before sending it to anyone.'
+    },
+    hash: {
+      title: 'Compute the SHA-256 hash of a file',
+      description:
+        'Take the SHA-1, SHA-256, SHA-384 or SHA-512 fingerprint of a file or text and compare it against the expected value to prove nothing was altered on the way.'
+    },
+    lab: {
+      title: 'Classic cipher simulators',
+      description:
+        'Caesar, Vigenere, Enigma and other ciphers working step by step on screen, so you can see how each one scrambles the text and why none of them protects anything today.'
+    },
+    privacy: {
+      title: 'Privacy policy',
+      description:
+        'What the site does with your data: nothing. There is no server, no database and no account, and no file or password ever leaves your browser.'
+    },
+    terms: {
+      title: 'Terms of use',
+      description: 'The rules for using Cryptographer and the limits of what it promises.'
+    },
+    cookies: {
+      title: 'Cookies',
+      description:
+        'Which cookies the site uses and why. Only what it takes to remember the language and the theme you picked.'
+    },
+    notFound: {
+      title: 'Page not found',
+      description: 'This address does not exist here.'
+    },
+    features: [
+      'Encrypt files with AES-256-GCM',
+      'Password protected AES-256 ZIP',
+      'Hide secrets in images and audio',
+      'Read and strip EXIF metadata',
+      'Compute SHA-1, SHA-256, SHA-384 and SHA-512 hashes',
+      'Classic cipher simulators'
+    ]
+  },
+
   form: {
     password: 'Password',
     passwordPlaceholder: 'the one you will remember',
