@@ -362,6 +362,135 @@ const paginas = [
     `
   },
   {
+    arquivo: 'caminho-sem-senha.png',
+    estilo: `
+      .mesa {
+        display: grid;
+        grid-template-columns: 1fr 200px 1fr;
+        gap: 0;
+        align-items: start;
+      }
+
+      .lado {
+        border: 1.5px solid var(--tinta);
+        border-radius: 3px;
+        padding: 18px 18px 16px;
+        background: var(--papel);
+      }
+
+      .lado h2 {
+        margin: 0 0 3px;
+        font-size: 1.05rem;
+      }
+
+      .lado p.papel {
+        margin: 0 0 14px;
+        font-size: 0.72rem;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--fraco);
+      }
+
+      .acao {
+        border: 1.3px solid var(--tinta);
+        border-radius: 2px;
+        padding: 9px 11px;
+        margin-bottom: 9px;
+        font-size: 0.82rem;
+      }
+
+      .acao b { display: block; font-weight: 700; }
+      .acao span { display: block; margin-top: 2px; font-size: 0.74rem; color: var(--fraco); }
+
+      .fica {
+        border-style: dashed;
+        border-color: var(--lacre);
+        background: var(--papel-fundo);
+      }
+
+      .fica b { color: var(--lacre); }
+
+      .canal {
+        align-self: stretch;
+        border-top: 1.5px dashed var(--fraco);
+        border-bottom: 1.5px dashed var(--fraco);
+        margin-top: 62px;
+        padding: 12px 6px;
+        display: grid;
+        gap: 16px;
+        text-align: center;
+        background: var(--papel-fundo);
+      }
+
+      .canal .rotulo {
+        font-size: 0.62rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--fraco);
+      }
+
+      .passa b {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+
+      .passa span {
+        display: block;
+        font-size: 1.1rem;
+        color: var(--tinta);
+        line-height: 1;
+        margin-top: 2px;
+      }
+
+      .nunca {
+        margin-top: 22px;
+        text-align: center;
+        font-size: 0.88rem;
+        color: var(--lacre);
+        font-weight: 700;
+      }
+    `,
+    corpo: `
+      <h1>O caminho sem senha</h1>
+      <p class="olho">as duas pessoas nunca combinaram nada antes</p>
+      <div class="risco"></div>
+
+      <div class="mesa">
+        <div class="lado">
+          <h2>Ana</h2>
+          <p class="papel">quem vai receber</p>
+
+          <div class="acao"><b>01 &nbsp;Gera o par</b><span>duas chaves, no navegador dela</span></div>
+          <div class="acao"><b>02 &nbsp;Espalha a pública</b><span>pode postar, pode mandar no grupo</span></div>
+          <div class="acao fica"><b>A privada fica aqui</b><span>não sai da máquina em momento nenhum</span></div>
+          <div class="acao"><b>05 &nbsp;Abre com a privada</b><span>e só ela consegue</span></div>
+        </div>
+
+        <div class="canal">
+          <p class="rotulo">canal aberto<br />qualquer um lê</p>
+
+          <p class="passa"><b>a chave pública</b><span>&rarr;</span></p>
+          <p class="passa"><b>o arquivo trancado</b><span>&larr;</span></p>
+
+          <p class="rotulo">ler isso não ajuda ninguém</p>
+        </div>
+
+        <div class="lado">
+          <h2>Bruno</h2>
+          <p class="papel">quem vai mandar</p>
+
+          <div class="acao"><b>03 &nbsp;Cola a chave da Ana</b><span>a pública, que veio pelo canal</span></div>
+          <div class="acao"><b>04 &nbsp;Tranca o arquivo</b><span>chave descartável + AES-256-GCM</span></div>
+          <div class="acao fica"><b>Nem ele abre de volta</b><span>trancou, e acabou o acesso dele</span></div>
+        </div>
+      </div>
+
+      <p class="nunca">a chave privada nunca atravessa nada</p>
+      <p class="rodape">não existe o momento de combinar senha, e é esse momento que costuma vazar</p>
+    `
+  },
+  {
     arquivo: 'og.png',
     pasta: 'public',
     seletor: '.cartao',

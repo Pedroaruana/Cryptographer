@@ -7,8 +7,8 @@ Criptografia que roda inteira dentro do navegador. Sem conta, sem banco de dados
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
-![Vitest](https://img.shields.io/badge/Vitest-100%20testes-6E9F18?style=flat-square&logo=vitest&logoColor=white)
-![Playwright](https://img.shields.io/badge/Playwright-20%20testes-2EAD33?style=flat-square&logo=playwright&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-126%20testes-6E9F18?style=flat-square&logo=vitest&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-26%20testes-2EAD33?style=flat-square&logo=playwright&logoColor=white)
 [![Deploy](https://img.shields.io/badge/Deploy-Vercel-000000?style=flat-square&logo=vercel&logoColor=white)](https://cryptographer-seven.vercel.app/)
 
 **[cryptographer-seven.vercel.app](https://cryptographer-seven.vercel.app/)**
@@ -19,10 +19,11 @@ Criptografia que roda inteira dentro do navegador. Sem conta, sem banco de dados
 
 - **Lacrar** um arquivo ou uma mensagem com AES-256-GCM. Sai um `.cgph` ou um `.zip` com senha, que abre no 7-Zip de qualquer computador
 - **Abrir** de volta com a mesma senha
+- **Chaveiro**: gerar um par de chaves e trancar um arquivo pra uma pessoa específica, sem precisar combinar senha com ela antes. E repartir um segredo em partes que só remontam juntas
 - **Esconder** um segredo dentro dos pixels de um PNG ou das amostras de um WAV. O arquivo continua abrindo normal em qualquer programa, carregando o segredo dentro
 - **Metadados**: ver o que a sua foto entrega sem você saber, câmera, data e a coordenada de GPS de onde foi tirada, e apagar isso
-- **Impressão digital**: SHA-1, SHA-256, SHA-384 e SHA-512 de um arquivo ou texto, com comparação contra um valor esperado
-- **Simuladores**: 22 cifras clássicas funcionando passo a passo, todas com o aviso de que nenhuma delas protege nada hoje
+- **Impressão digital**: SHA-1, SHA-256, SHA-384 e SHA-512 de um arquivo ou texto. Também assinar, pra provar quem fez, e selar com senha, pra provar que veio de quem sabe o combinado
+- **Simuladores**: oito bancadas, das 22 cifras clássicas à troca de chaves de Diffie-Hellman e à comparação entre AES-CBC e AES-GCM
 
 Tudo em português e inglês, com tema claro e escuro. Depois da primeira visita o site fica guardado no navegador e **abre sem internet**, com tudo funcionando.
 
@@ -36,11 +37,21 @@ A criptografia roda num Web Worker pra tela não travar em arquivo grande, e o a
 
 Como nada depende de servidor, um service worker guarda o site inteiro no navegador na primeira visita. Da segunda em diante ele abre com a internet desligada, e um teste desliga a rede de verdade pra conferir que essa frase continua sendo verdade.
 
+### Quando não dá pra combinar senha
+
+Senha combinada por fora é o ponto mais frágil de qualquer arquivo trancado, porque esse combinado acontece no WhatsApp, no email ou no telefone. O chaveiro tira esse momento da jogada.
+
+![O caminho sem senha, com par de chaves](docs/caminho-sem-senha.png)
+
+A troca é ECDH na curva P-256, com uma chave descartável por arquivo e HKDF antes de chegar no AES. São dois pares e não um: trocar chave e assinar são trabalhos diferentes, e usar a mesma chave pros dois é erro conhecido.
+
 ### O formato .cgph
 
 ![A anatomia dos bytes de um arquivo .cgph](docs/anatomia-cgph.png)
 
-Os dois desenhos acima saem de [`scripts/diagramas.mjs`](scripts/diagramas.mjs), então dá pra refazer eles quando o formato mudar.
+O arquivo do chaveiro é um formato irmão, o `.cgpk`. Muda só o cabeçalho, que guarda a chave descartável em vez do sal e das iterações; os registros são os mesmos.
+
+Os desenhos acima saem de [`scripts/diagramas.mjs`](scripts/diagramas.mjs), então dá pra refazer eles quando o formato mudar.
 
 ## Stack
 
@@ -62,6 +73,10 @@ src/
   crypto/      o núcleo, sem nenhuma referência a tela
     format.ts    o contrato: bytes, tamanhos, versão do formato
     core.ts      lacrar e abrir arquivo
+    keys.ts      par de chaves, trancar pra alguém e assinar
+    shamir.ts    repartir um segredo em partes
+    hmac.ts      o selo com senha
+    armor.ts     bytes viram texto de copiar e colar
     text.ts      lacrar e abrir mensagem
     archive.ts   o ZIP com senha
     stego.ts     esconder em imagem
@@ -90,8 +105,8 @@ npm run dev
 ## Testes
 
 ```bash
-npm test          # 100 testes no núcleo, sem navegador
-npm run test:e2e  # 20 testes abrindo o site e clicando
+npm test          # 126 testes no núcleo, sem navegador
+npm run test:e2e  # 26 testes abrindo o site e clicando
 ```
 
 Os testes do núcleo conferem contra vetor oficial: o SHA-256 de `abc` tem que dar exatamente o valor do padrão. Os testes de tela lacram um arquivo, baixam, abrem de volta e comparam byte por byte.
@@ -107,6 +122,8 @@ Da primeira vez o Playwright precisa do navegador: `npx playwright install chrom
 **O resultado travava em 0%.** Se a pessoa trocasse de aba durante a criptografia, o arquivo ficava preso pra sempre. Descobri que o `requestAnimationFrame` para de rodar em aba escondida, e eu tinha colocado a entrega do resultado dentro dele. O número na tela pode depender dele, o resultado não.
 
 **O PNG que não entrava.** Eu comparava o nome do arquivo com uma lista de tipos MIME, então `foto.png` nunca ia bater com `image/png`. Levei um susto porque parecia um problema grande e era comparação errada.
+
+**O cache cheio que não servia pra nada.** Pra fazer o site abrir sem internet, o service worker guardava todos os arquivos certinho, e na hora de usar não achava nenhum. As respostas vêm com `Vary: Origin`, e o pedido que eu tinha guardado não trazia o mesmo `Origin` do pedido que o navegador faz depois, então nada casava. Uma opção a mais no `caches.match` resolveu, e isso ia acontecer no ar igual.
 
 **O idioma que mudou sozinho no servidor.** No último commit, o gerador de HTML rodava aqui e saía em português, rodava no GitHub e saía em inglês. É que o Node também tem `navigator`, e eu estava deixando o ambiente decidir em vez de mandar. Isso eu nem ia perceber, quem pegou foi um teste.
 
