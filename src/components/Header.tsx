@@ -109,7 +109,7 @@ export const Header = () => {
         </Link>
 
         {/* a partir de 1040px cabe tudo numa linha. abaixo disso vira gaveta */}
-        <nav className="hidden xl:flex items-center gap-5">
+        <nav className="hidden min-[1400px]:flex items-center gap-3 2xl:gap-5 [&>a]:whitespace-nowrap">
           {links}
           {langPicker}
           {themeButton}
@@ -118,7 +118,7 @@ export const Header = () => {
           </Link>
         </nav>
 
-        <div className="flex xl:hidden items-center gap-3">
+        <div className="flex min-[1400px]:hidden items-center gap-3">
           {themeButton}
 
           <button

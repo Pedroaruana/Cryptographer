@@ -43,8 +43,8 @@ export const StepsNote = () => {
 
       {/* as abas ficam em cima, como divisorias de fichario, e do lado
           direito o atalho pra tela que faz aquilo */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pl-3 md:pl-20 pr-3 md:pr-8 pt-6">
-        <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-3 pl-3 md:pl-20 pr-3 md:pr-8 pt-6">
+        <div className="flex flex-wrap gap-2 min-w-0">
           {t.home.guide.map((pagina, index) => (
             <button
               key={pagina.key}
@@ -58,7 +58,10 @@ export const StepsNote = () => {
           ))}
         </div>
 
-        <Link to={atual.to} className="btn guide-cta no-underline text-[0.85rem] py-2 px-3.5">
+        <Link
+          to={atual.to}
+          className="btn guide-cta no-underline text-[0.85rem] py-2 px-3.5 shrink-0 whitespace-nowrap"
+        >
           {atual.cta} {'\u2192'}
         </Link>
       </div>
