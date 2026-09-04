@@ -21,7 +21,14 @@ export default defineConfig({
   },
 
   projects: [
-    { name: 'desktop', use: { ...devices['Desktop Chrome'] }, testIgnore: /celular\.spec\.ts/ },
+    {
+      name: 'desktop',
+      // 1440 e nao os 1280 que vem por padrao: o menu completo do topo so
+      // aparece a partir de 1400, e abaixo disso vale a gaveta, que ja e
+      // testada no projeto do celular
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
+      testIgnore: /celular\.spec\.ts/
+    },
     { name: 'celular', use: { ...devices['Pixel 7'] }, testMatch: /celular\.spec\.ts/ }
   ],
 
