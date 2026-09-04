@@ -21,6 +21,11 @@ const TELAS = [
     marca: 'segredo dentro de uma foto'
   },
   {
+    rota: '/chaveiro',
+    titulo: /^Chaveiro: trancar arquivo com chave pública \| Cryptographer$/,
+    marca: 'sem combinar senha'
+  },
+  {
     rota: '/metadados',
     titulo: /metadados EXIF da foto \| Cryptographer$/,
     marca: 'Metadados'

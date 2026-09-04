@@ -55,6 +55,15 @@
           "value": "public, max-age=0, must-revalidate"
         }
       ]
+    },
+    {
+      "source": "/(og.png|favicon.svg)",
+      "headers": [
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "cross-origin"
+        }
+      ]
     }
   ],
   "rewrites": [
@@ -93,6 +102,10 @@
     {
       "source": "/cookies",
       "destination": "/cookies.html"
+    },
+    {
+      "source": "/chaveiro",
+      "destination": "/chaveiro.html"
     },
     {
       "source": "/(.*)",

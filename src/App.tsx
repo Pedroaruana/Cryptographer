@@ -4,6 +4,7 @@ import { Layout } from './components/Layout'
 import { LangProvider } from './i18n/context'
 import { CipherPage } from './pages/CipherPage'
 import { HashPage } from './pages/HashPage'
+import { KeyringPage } from './pages/KeyringPage'
 import { Lab } from './pages/Lab'
 import { HidePage } from './pages/HidePage'
 import { MetadataPage } from './pages/MetadataPage'
@@ -20,6 +21,7 @@ export const Rotas = () => (
       <Route path="/encrypt" element={<CipherPage mode="encrypt" />} />
       <Route path="/decrypt" element={<CipherPage mode="decrypt" />} />
       <Route path="/esconder" element={<HidePage />} />
+      <Route path="/chaveiro" element={<KeyringPage />} />
       <Route path="/metadados" element={<MetadataPage />} />
       <Route path="/hash" element={<HashPage />} />
       <Route path="/simuladores" element={<Lab />} />

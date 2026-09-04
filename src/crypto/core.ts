@@ -154,22 +154,16 @@ const openBlock = async (key: CryptoKey, index: number, iv: Uint8Array, cipher: 
   }
 }
 
-export const encryptBlob = async (
+// daqui pra baixo nao interessa de onde a chave veio: se de senha ou de uma
+// troca de chaves. e por isso que essas duas ficam separadas e exportadas
+export const sealStream = async (
+  key: CryptoKey,
   blob: Blob,
   meta: FileMeta,
-  password: string,
-  onProgress: Progress,
-  algo: number = ALGO_AES_GCM
+  head: Uint8Array,
+  onProgress: Progress
 ): Promise<Blob> => {
-  if (blob.size > MAX_FILE_BYTES) throw new CryptoError('file-too-big')
-
-  const salt = crypto.getRandomValues(new Uint8Array(SALT_BYTES))
-
-  onProgress(0.02)
-  const key = await deriveKey(algo, password, salt, KDF_ITERATIONS)
-  onProgress(0.08)
-
-  const parts: BlobPart[] = [buildHeader(salt, algo) as BlobPart]
+  const parts: BlobPart[] = [head as BlobPart]
 
   // o bloco 0 guarda nome e tipo do arquivo, cifrados junto. assim o arquivo
   // final nao entrega nem o nome original de quem mandou
@@ -187,20 +181,13 @@ export const encryptBlob = async (
   return new Blob(parts, { type: 'application/octet-stream' })
 }
 
-export const decryptBlob = async (
+export const openStream = async (
+  key: CryptoKey,
   blob: Blob,
-  password: string,
+  offset: number,
   onProgress: Progress
 ): Promise<{ blob: Blob; meta: FileMeta }> => {
-  if (blob.size < HEADER_BYTES) throw new CryptoError('not-our-file')
-
-  const header = readHeader(new Uint8Array(await blob.slice(0, HEADER_BYTES).arrayBuffer()))
-
-  onProgress(0.02)
-  const key = await deriveKey(header.algo, password, header.salt, header.iterations)
-  onProgress(0.08)
-
-  let cursor = HEADER_BYTES
+  let cursor = offset
   let index = 0
   let meta: FileMeta | null = null
   const parts: BlobPart[] = []
@@ -229,4 +216,38 @@ export const decryptBlob = async (
   if (!meta) throw new CryptoError('corrupted')
 
   return { blob: new Blob(parts, { type: meta.type || 'application/octet-stream' }), meta }
+}
+
+export const encryptBlob = async (
+  blob: Blob,
+  meta: FileMeta,
+  password: string,
+  onProgress: Progress,
+  algo: number = ALGO_AES_GCM
+): Promise<Blob> => {
+  if (blob.size > MAX_FILE_BYTES) throw new CryptoError('file-too-big')
+
+  const salt = crypto.getRandomValues(new Uint8Array(SALT_BYTES))
+
+  onProgress(0.02)
+  const key = await deriveKey(algo, password, salt, KDF_ITERATIONS)
+  onProgress(0.08)
+
+  return sealStream(key, blob, meta, buildHeader(salt, algo), onProgress)
+}
+
+export const decryptBlob = async (
+  blob: Blob,
+  password: string,
+  onProgress: Progress
+): Promise<{ blob: Blob; meta: FileMeta }> => {
+  if (blob.size < HEADER_BYTES) throw new CryptoError('not-our-file')
+
+  const header = readHeader(new Uint8Array(await blob.slice(0, HEADER_BYTES).arrayBuffer()))
+
+  onProgress(0.02)
+  const key = await deriveKey(header.algo, password, header.salt, header.iterations)
+  onProgress(0.08)
+
+  return openStream(key, blob, HEADER_BYTES, onProgress)
 }

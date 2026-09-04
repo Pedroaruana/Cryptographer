@@ -21,7 +21,16 @@ test('o menu do celular abre e leva pra tela escolhida', async ({ page }) => {
 })
 
 test('nenhuma tela rola pra o lado no celular', async ({ page }) => {
-  const telas = ['/', '/encrypt', '/decrypt', '/esconder', '/metadados', '/hash', '/simuladores']
+  const telas = [
+    '/',
+    '/encrypt',
+    '/decrypt',
+    '/esconder',
+    '/chaveiro',
+    '/metadados',
+    '/hash',
+    '/simuladores'
+  ]
 
   for (const tela of telas) {
     await abrir(page, tela)
