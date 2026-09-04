@@ -70,7 +70,7 @@ padding. O PR referencia com `Closes #12`, e o merge fecha a issue sozinho.
 
 `npm run build` faz três coisas: compila o site, compila o `src/entry-server.tsx`
 num pacote que roda no node, e o `scripts/prerender.mjs` usa esse pacote pra
-desenhar as dez telas em texto e gravar um `.html` pronto pra cada endereço.
+desenhar as onze telas em texto e gravar um `.html` pronto pra cada endereço.
 
 É por isso que as rotas moram soltas em `Rotas`, fora do `BrowserRouter`: o
 gerador monta elas com o `StaticRouter`, que não depende da barra de endereço.
@@ -93,11 +93,13 @@ arquivo, roda de novo em vez de editar imagem na mão.
 ## Os dois tipos de teste
 
 `npm test` roda o Vitest em cima do núcleo: formato do arquivo, cifras, hash,
-esteganografia, metadados. É rápido e não abre navegador nenhum.
+esteganografia, metadados, par de chaves, assinatura, selo e segredo repartido.
+É rápido e não abre navegador nenhum.
 
 `npm run test:e2e` roda o Playwright, que faz o build, sobe o site e clica nele
 de verdade: lacra um arquivo e abre de volta conferindo byte por byte, recusa
-senha errada, esconde e tira segredo da foto, e confere o menu no celular. Da
+senha errada, tranca com chave pública e confere que só a privada certa abre,
+esconde e tira segredo da foto, e confere o menu no celular. Da
 primeira vez precisa de `npx playwright install chromium`.
 
 Teste de tela que passa tanto com o código certo quanto com o errado não serve
