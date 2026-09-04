@@ -7,6 +7,8 @@ export const pt: Dict = {
     hash: 'Impressão digital',
     how: 'Como funciona',
     navHide: 'Esconder',
+    navKeys: 'Chaveiro',
+    navLab: 'Simuladores',
     navMeta: 'Metadados',
     menu: 'Menu',
     skip: 'Pular para o conteúdo'
@@ -32,7 +34,38 @@ export const pt: Dict = {
     verifyPlaceholder: 'cola aqui o hash esperado',
     match: 'Bateu. O arquivo é exatamente o que você esperava.',
     noMatch: 'Não bateu. Esse não é o mesmo arquivo.',
-    note: 'Isso não é criptografia. Hash não tem volta, então não existe jeito de recuperar o arquivo a partir dele.'
+    note: 'Isso não é criptografia. Hash não tem volta, então não existe jeito de recuperar o arquivo a partir dele.',
+    modeHash: 'Impressão',
+    modeSign: 'Assinar',
+    modeSeal: 'Selo com senha',
+    signLead:
+      'A impressão digital prova que o arquivo não mudou, mas qualquer um consegue tirar a impressão de qualquer arquivo. A assinatura prova também quem foi: só a sua chave privada produz aquela marca, e a sua chave pública deixa qualquer um conferir.',
+    signKey: 'Sua chave privada',
+    signKeyPlaceholder: 'cole aqui a sua chave privada',
+    signAction: 'Assinar o arquivo',
+    signWorking: 'Assinando...',
+    signOut: 'A assinatura',
+    verifyKey: 'Chave pública de quem assinou',
+    verifyKeyPlaceholder: 'cole aqui a chave pública',
+    verifySig: 'A assinatura',
+    verifySigPlaceholder: 'cole aqui a assinatura',
+    verifyAction: 'Conferir a assinatura',
+    verifyOk: 'Confere. Foi essa pessoa que assinou, e o arquivo não mudou desde então.',
+    verifyNo: 'Não confere. Ou não foi essa chave que assinou, ou o arquivo mudou depois.',
+    doSign: 'Assinar',
+    doVerify: 'Conferir',
+    sealLead:
+      'É o meio termo. Assinatura precisa de par de chaves; aqui basta uma senha combinada entre as duas pessoas. Quem tem a senha produz o selo e confere o selo, quem não tem não faz nem uma coisa nem outra.',
+    sealAction: 'Selar o arquivo',
+    sealWorking: 'Selando...',
+    sealOut: 'O selo',
+    sealCheck: 'O selo que veio junto',
+    sealCheckPlaceholder: 'cole aqui o selo',
+    sealCheckAction: 'Conferir o selo',
+    sealOk: 'Confere. Veio de quem sabe a senha, e o arquivo não mudou.',
+    sealNo: 'Não confere. Ou a senha é outra, ou o arquivo mudou.',
+    doSeal: 'Selar',
+    doCheckSeal: 'Conferir'
   },
 
   hide: {
@@ -141,7 +174,7 @@ export const pt: Dict = {
     titleA: 'Tranque um arquivo',
     titleB: 'como se tranca',
     titleC: 'uma gaveta.',
-    lead: 'Cinco coisas, todas dentro do seu navegador. Trancar um arquivo pra ninguém abrir sem a senha. Esconder um segredo dentro de uma foto ou de um áudio que continuam parecendo os mesmos. Transformar um recado em algo ilegível. Ver o que a sua foto já entrega sem você saber. Ou tirar a impressão digital de um arquivo pra provar que ninguém encostou nele.',
+    lead: 'Seis coisas, todas dentro do seu navegador. Trancar um arquivo pra ninguém abrir sem a senha. Trancar pra uma pessoa específica, sem precisar combinar senha com ela antes. Esconder um segredo dentro de uma foto ou de um áudio que continuam parecendo os mesmos. Transformar um recado em algo ilegível. Ver o que a sua foto já entrega sem você saber. Ou provar que um arquivo não mudou, e de quebra provar quem fez.',
     ctaPrimary: 'Lacrar alguma coisa',
     ctaSecondary: 'Abrir um arquivo lacrado',
     trust: 'Grátis · Sem conta · Sem upload · Funciona offline',
@@ -241,6 +274,38 @@ export const pt: Dict = {
         ]
       },
       {
+        key: 'keys',
+        to: '/chaveiro',
+        cta: 'Ir gerar o meu par',
+        tab: 'Trancar pra uma pessoa',
+        steps: [
+          {
+            n: '01',
+            title: 'Gera o seu par',
+            text: 'Saem duas chaves. A pública você espalha, pode postar no perfil ou mandar no grupo. A privada fica com você e não sai da máquina.'
+          },
+          {
+            n: '02',
+            title: 'A pessoa tranca com a sua pública',
+            text: 'Ela cola a sua chave, escolhe o arquivo e tranca. Nem ela consegue abrir de volta depois disso, e é assim mesmo que tem que ser.'
+          },
+          {
+            n: '03',
+            title: 'Só a sua privada abre',
+            text: 'Você recebe o .cgpk, cola a sua chave privada e abre. Ninguém precisou combinar senha por fora em momento nenhum.'
+          }
+        ],
+        panelTitle: 'Por que isso resolve um problema real',
+        panelLead: 'Senha combinada por fora é o ponto mais frágil de qualquer arquivo trancado.',
+        rows: [],
+        notes: [
+          'Pra mandar um arquivo com senha, as duas pessoas precisam combinar a senha antes, e esse combinado costuma acontecer no WhatsApp, no email ou no telefone. Se alguém está lendo aquele canal, leu a senha junto.',
+          'Com par de chaves não existe esse momento. A chave pública pode ser lida por qualquer um sem prejuízo nenhum, porque ela só serve pra trancar.',
+          'A cada arquivo o site gera uma chave descartável, usa uma vez e joga fora. Dois arquivos mandados pra mesma pessoa não têm nada em comum.',
+          'Se você perder a chave privada, perde tudo que mandaram pra você. Não existe recuperação, pelo mesmo motivo de sempre: se existisse, existiria uma porta.'
+        ]
+      },
+      {
         key: 'meta',
         to: '/metadados',
         cta: 'Ir ver o que a foto entrega',
@@ -313,7 +378,7 @@ export const pt: Dict = {
           {
             n: '01',
             title: 'Escolhe uma máquina',
-            text: 'São seis, da Enigma de 1918 ao disco de cifra de 1467. Todas rodam o algoritmo de verdade, não são animação.'
+            text: 'São oito, da Enigma de 1918 ao disco de cifra de 1467. Todas rodam o algoritmo de verdade, não são animação.'
           },
           {
             n: '02',
@@ -425,6 +490,11 @@ export const pt: Dict = {
       description:
         'Esteganografia no navegador: põe um segredo nos pixels de um PNG ou nas amostras de um WAV, e tira de lá depois. A foto continua abrindo normal em qualquer programa.'
     },
+    keyring: {
+      title: 'Chaveiro: trancar arquivo com chave pública',
+      description:
+        'Gere um par de chaves no navegador, tranque um arquivo para alguém sem combinar senha antes, e reparta um segredo em várias partes exigindo só algumas de volta.'
+    },
     metadata: {
       title: 'Ver e limpar os metadados EXIF da foto',
       description:
@@ -466,6 +536,69 @@ export const pt: Dict = {
       'Calcular hash SHA-1, SHA-256, SHA-384 e SHA-512',
       'Simuladores de cifras clássicas'
     ]
+  },
+
+  chaveiro: {
+    eyebrow: 'Chaveiro',
+    title: 'Tranque pra alguém sem combinar senha.',
+    lead: 'Aqui você gera um par: uma chave pública, que pode sair espalhando por aí, e uma privada, que não sai da sua máquina nunca. Quem quiser te mandar arquivo tranca com a sua pública, e só a sua privada abre. Ninguém precisa combinar senha por fora, que é justamente onde senha costuma vazar.',
+    tabPair: 'Meu par',
+    tabSeal: 'Trancar pra alguém',
+    tabSplit: 'Repartir um segredo',
+
+    pairTitle: 'Gere o seu par',
+    pairLead:
+      'Um clique e o navegador cria as chaves. Elas não saem daqui: se você fechar a aba sem guardar, some tudo e não tem como recuperar.',
+    generate: 'Gerar meu par',
+    generating: 'Gerando...',
+    again: 'Gerar outro',
+    publicLabel: 'Chave pública',
+    publicHint: 'Essa você manda pra quem quiser. Pode postar, mandar no grupo, colar no perfil.',
+    privateLabel: 'Chave privada',
+    privateHint:
+      'Essa é só sua. Quem tiver ela abre tudo que mandarem pra você, então guarde como guardaria uma senha.',
+    copy: 'Copiar',
+    copied: 'Copiado',
+    download: 'Baixar',
+    warnKeep:
+      'O site não guarda nada. Fechou a aba, as chaves somem. Copie as duas antes de sair, e nunca mande a privada pra ninguém.',
+
+    sealDo: 'Trancar',
+    sealOpen: 'Abrir o que mandaram',
+    theirKey: 'Chave pública de quem vai receber',
+    theirKeyPlaceholder: 'cole aqui a chave pública que a pessoa te passou',
+    myKey: 'Sua chave privada',
+    myKeyPlaceholder: 'cole aqui a sua chave privada',
+    sealAction: 'Trancar pra essa pessoa',
+    sealWorking: 'Trancando...',
+    sealDone: 'Trancado. Só ela abre.',
+    sealDownload: 'Baixar arquivo trancado',
+    openAction: 'Abrir com a minha chave',
+    openWorking: 'Abrindo...',
+    openDone: 'Aberto.',
+    openDownload: 'Baixar o original',
+    drop: 'Solta um arquivo aqui',
+    dropSealed: 'Solta o arquivo .cgpk aqui',
+    dropHint: 'ou clica pra escolher',
+
+    splitLead:
+      'Reparte um segredo em várias partes e exige só algumas de volta. Parte nenhuma sozinha entrega nada: até juntar o número combinado, cada uma é ruído.',
+    secret: 'O segredo',
+    secretPlaceholder: 'uma senha, uma frase de recuperação, um código...',
+    parts: 'Quantas partes',
+    need: 'Quantas bastam pra remontar',
+    splitAction: 'Repartir',
+    splitDone: 'Repartido em {n} partes.',
+    partLabel: 'Parte {n}',
+    joinTitle: 'Juntar de volta',
+    joinLead: 'Cole as partes, uma embaixo da outra, deixando uma linha em branco entre elas.',
+    joinWarn:
+      'Se faltar parte, o resultado sai errado sem aviso. A conta não tem como saber quantas eram necessárias, então o que aparece é ruído, não um erro.',
+    joinPlaceholder: 'cole aqui as partes',
+    joinAction: 'Remontar o segredo',
+    joinDone: 'Remontado.',
+    warnSplit:
+      'Guarde as partes em lugares diferentes. Se as cinco ficarem na mesma gaveta, repartir não protegeu de nada.'
   },
 
   form: {
@@ -533,9 +666,45 @@ export const pt: Dict = {
   },
 
   lab: {
+    hand: {
+      title: 'Combinar uma chave sem nunca enviar a chave.',
+      lead: 'Duas pessoas que nunca se falaram antes conseguem chegar no mesmo número secreto trocando mensagens na frente de todo mundo. Quem estiver escutando vê os dois números que passaram e mesmo assim não consegue calcular o resultado.',
+      body: [
+        'Cada uma escolhe um número e guarda pra si. Depois cada uma faz uma conta com o número público, e manda o resultado dessa conta pra outra. Aí cada uma refaz a conta usando o que recebeu e o próprio segredo, e as duas caem exatamente no mesmo valor.',
+        'A graça é que a conta é fácil de fazer num sentido e absurdamente cara de desfazer. Quem intercepta tem os dois números públicos e continua sem os segredos, que é o que faltaria pra chegar no valor final.',
+        'Aqui os números são minúsculos pra caber na tela. Na vida real são centenas de dígitos, e é isso que separa "difícil" de "impossível na prática". É essa conta que roda toda vez que você abre um site em HTTPS.'
+      ],
+      tip: 'Mexe nos dois seletores e repara: os números que passam pelo meio mudam, mas o valor final continua igual dos dois lados.',
+      secret: 'o segredo',
+      sends: 'manda',
+      arrives: 'chega em',
+      her: 'Ana',
+      him: 'Bruno',
+      public: 'todo mundo sabe:',
+      and: 'e',
+      spy: 'quem escuta vê só isso',
+      same: 'os dois chegaram no mesmo número, e ele nunca passou pelo meio',
+      diff: 'os dois deveriam chegar no mesmo número'
+    },
+    modes: {
+      title: 'Por que o GCM ganhou.',
+      lead: 'AES é o mesmo nos dois casos. O que muda é o modo, que é a regra de como o AES é aplicado ao arquivo inteiro. E essa escolha decide se alguém consegue alterar o seu arquivo cifrado sem você perceber.',
+      body: [
+        'No CBC o arquivo é embaralhado e pronto. Ninguém lê sem a chave, mas também ninguém garante que aquilo chegou inteiro. Alguém no caminho pode virar um bit e o resultado vai abrir do mesmo jeito, com o conteúdo alterado.',
+        'No GCM, além de embaralhar, o AES calcula um carimbo em cima do que foi cifrado. Na hora de abrir, o carimbo é conferido primeiro. Bateu, abre. Não bateu, recusa e não entrega nada, nem uma parte.',
+        'É por isso que o site inteiro usa GCM e o CBC só aparece aqui, como demonstração. Confidencialidade sem integridade dá uma falsa sensação de segurança: o arquivo continua secreto e ao mesmo tempo continua adulterável.'
+      ],
+      tip: 'Arrasta pra escolher qual byte do arquivo cifrado vai ser mexido, e compara os dois lados.',
+      original: 'a mensagem original',
+      byte: 'byte adulterado',
+      cbc: 'aceitou calado e entregou outra coisa',
+      gcm: 'percebeu e recusou',
+      refused: 'recusado',
+      broke: 'saiu ilegível'
+    },
     eyebrow: 'Bancada',
     title: 'Simuladores de criptografia',
-    lead: 'Seis máquinas que você opera. Nada aqui é foto de coisa nenhuma, é a coisa mesmo, rodando o algoritmo de verdade no seu navegador.',
+    lead: 'Oito máquinas que você opera. Nada aqui é foto de coisa nenhuma, é a coisa mesmo, rodando o algoritmo de verdade no seu navegador.',
     seeAll: 'Ver todos os simuladores',
     back: 'Voltar pro começo',
 
@@ -884,6 +1053,14 @@ export const pt: Dict = {
     'nothing-hidden':
       'Não tem nada escondido nessa foto. Ou ela nunca carregou segredo, ou foi redimensionada ou recomprimida no caminho.',
     corrupted: 'O arquivo está danificado e não dá pra ler até o fim.',
+    'bad-key':
+      'Isso não parece uma chave do Cryptographer. Confere se colou o bloco inteiro, do BEGIN até o END.',
+    'not-for-you':
+      'Esse arquivo não foi trancado pra essa chave. Ou ele é de outra pessoa, ou você colou a chave errada.',
+    'few-parts':
+      'Faltam partes. Junte pelo menos o número que foi combinado quando o segredo foi repartido.',
+    'mixed-parts':
+      'Essas partes não combinam entre si. Ou vieram de segredos diferentes, ou tem parte repetida no meio.',
     unknown: 'Alguma coisa quebrou no caminho. Tenta de novo.',
     retry: 'Tentar de novo'
   },

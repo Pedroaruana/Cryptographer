@@ -3,6 +3,8 @@ import { CipherDisc } from '../components/CipherDisc'
 import { Avalanche } from '../components/sims/Avalanche'
 import { CaesarCracker } from '../components/sims/CaesarCracker'
 import { Enigma } from '../components/sims/Enigma'
+import { Handshake } from '../components/sims/Handshake'
+import { Modes } from '../components/sims/Modes'
 import { Timeline } from '../components/sims/Timeline'
 import { Vault } from '../components/sims/Vault'
 import { useLang } from '../i18n/context'
@@ -17,6 +19,8 @@ export const Lab = () => {
     { key: 'crack', copy: t.lab.crack, rig: <CaesarCracker /> },
     { key: 'ava', copy: t.lab.ava, rig: <Avalanche /> },
     { key: 'vault', copy: t.lab.vault, rig: <Vault /> },
+    { key: 'hand', copy: t.lab.hand, rig: <Handshake /> },
+    { key: 'modes', copy: t.lab.modes, rig: <Modes /> },
     { key: 'disc', copy: t.disc, rig: <CipherDisc /> },
     { key: 'time', copy: t.lab.time, rig: <Timeline /> }
   ]

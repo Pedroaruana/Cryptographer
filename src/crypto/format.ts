@@ -32,6 +32,26 @@ export const MAX_FILE_BYTES = 512 * 1024 * 1024
 export const TEXT_HEADER = '-----BEGIN CRYPTOGRAPHER MESSAGE-----'
 export const TEXT_FOOTER = '-----END CRYPTOGRAPHER MESSAGE-----'
 
+export const PUB_HEADER = '-----BEGIN CRYPTOGRAPHER PUBLIC KEY-----'
+export const PUB_FOOTER = '-----END CRYPTOGRAPHER PUBLIC KEY-----'
+
+export const PRIV_HEADER = '-----BEGIN CRYPTOGRAPHER PRIVATE KEY-----'
+export const PRIV_FOOTER = '-----END CRYPTOGRAPHER PRIVATE KEY-----'
+
+export const SIGN_HEADER = '-----BEGIN CRYPTOGRAPHER SIGNATURE-----'
+export const SIGN_FOOTER = '-----END CRYPTOGRAPHER SIGNATURE-----'
+
+export const PART_HEADER = '-----BEGIN CRYPTOGRAPHER SHARE-----'
+export const PART_FOOTER = '-----END CRYPTOGRAPHER SHARE-----'
+
+// container do arquivo trancado com a chave publica de alguem. e um formato
+// separado do .cgph de proposito: la o cabecalho guarda sal e iteracoes, aqui
+// guarda a chave efemera, e misturar os dois so ia deixar os dois confusos
+export const PK_MAGIC = [0x43, 0x47, 0x50, 0x4b] // "CGPK"
+export const PK_VERSION = 1
+export const PK_EXTENSION = '.cgpk'
+export const CURVE = 'P-256'
+
 export type CryptoErrorCode =
   | 'wrong-password'
   | 'not-our-file'
@@ -41,6 +61,10 @@ export type CryptoErrorCode =
   | 'image-too-small'
   | 'nothing-hidden'
   | 'needs-password'
+  | 'bad-key'
+  | 'not-for-you'
+  | 'few-parts'
+  | 'mixed-parts'
   | 'unknown'
 
 export class CryptoError extends Error {

@@ -4,7 +4,10 @@ import { CAMINHOS } from '../seo'
 
 const vercel = JSON.parse(
   readFileSync(new URL('../../../vercel.json', import.meta.url), 'utf8')
-) as { rewrites: { source: string; destination: string }[] }
+) as {
+  rewrites: { source: string; destination: string }[]
+  headers: { source: string; headers: { key: string; value: string }[] }[]
+}
 
 describe('as rotas e o arquivo estatico de cada uma', () => {
   // se alguem criar uma tela nova e esquecer disso, ela cai no desvio geral
@@ -25,5 +28,27 @@ describe('as rotas e o arquivo estatico de cada uma', () => {
 
     expect(ultima).toEqual({ source: '/(.*)', destination: '/index.html' })
     expect(vercel.rewrites.filter((r) => r.source === '/(.*)')).toHaveLength(1)
+  })
+})
+
+describe('o cartao de compartilhamento', () => {
+  // o site inteiro manda o navegador nao exibir nada dele em outro site, e isso
+  // esta certo. mas o cartao existe pra ser exibido de fora, entao ele precisa
+  // da excecao, senao o link no whatsapp aparece com a figura quebrada
+  it('pode ser exibido de fora do site', () => {
+    const regra = vercel.headers.find((h) => h.source.includes('og.png'))
+
+    expect(regra, 'falta a excecao de og.png na vercel.json').toBeDefined()
+    expect(regra?.headers).toContainEqual({
+      key: 'Cross-Origin-Resource-Policy',
+      value: 'cross-origin'
+    })
+  })
+
+  it('a excecao vem depois da regra geral, senao ela nao vale', () => {
+    const geral = vercel.headers.findIndex((h) => h.source === '/(.*)')
+    const cartao = vercel.headers.findIndex((h) => h.source.includes('og.png'))
+
+    expect(cartao).toBeGreaterThan(geral)
   })
 })

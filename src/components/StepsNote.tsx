@@ -13,6 +13,7 @@ import { useLang } from '../i18n/context'
 const SKETCHES = [
   [<SketchPhoto key="a" />, <SketchKey key="b" />, <SketchEnvelope key="c" />],
   [<SketchPhoto key="d" />, <SketchKey key="e" />, <SketchPhoto key="f" />],
+  [<SketchKey key="p" />, <SketchEnvelope key="q" />, <SketchKey key="r" />],
   [<SketchPhoto key="j" />, <SketchFingerprint key="k" />, <SketchEnvelope key="l" />],
   [<SketchFingerprint key="g" />, <SketchFingerprint key="h" />, <SketchKey key="i" />],
   [<SketchKey key="m" />, <SketchPhoto key="n" />, <SketchFingerprint key="o" />]

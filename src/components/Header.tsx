@@ -28,6 +28,9 @@ export const Header = () => {
       <NavLink to="/esconder" className={linkClass}>
         {t.nav.navHide}
       </NavLink>
+      <NavLink to="/chaveiro" className={linkClass}>
+        {t.nav.navKeys}
+      </NavLink>
       <NavLink to="/metadados" className={linkClass}>
         {t.nav.navMeta}
       </NavLink>
@@ -35,7 +38,7 @@ export const Header = () => {
         {t.nav.hash}
       </NavLink>
       <NavLink to="/simuladores" className={linkClass}>
-        {t.lab.title}
+        {t.nav.navLab}
       </NavLink>
     </>
   )

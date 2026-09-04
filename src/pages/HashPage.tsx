@@ -1,5 +1,6 @@
 import { useId, useState } from 'react'
 import { FileDrop } from '../components/FileDrop'
+import { ProofPanel } from '../components/ProofPanel'
 import { useCipher } from '../hooks/useCipher'
 import { HASH_IDS, type HashId } from '../crypto/hash'
 import { MAX_FILE_BYTES } from '../crypto/format'
@@ -8,6 +9,9 @@ import { useLang } from '../i18n/context'
 export const HashPage = () => {
   const { t } = useLang()
 
+  // impressao, assinatura e selo respondem perguntas diferentes sobre o mesmo
+  // arquivo: mudou? quem fez? veio de quem sabe a senha?
+  const [modo, setModo] = useState<'hash' | 'sign' | 'seal'>('hash')
   const [tab, setTab] = useState<'file' | 'text'>('file')
   const [algo, setAlgo] = useState<HashId>('SHA-256')
   const [file, setFile] = useState<File | null>(null)
@@ -39,7 +43,37 @@ export const HashPage = () => {
       <h1 className="display text-[clamp(2.2rem,6vw,3.6rem)] mt-2 mb-4">{t.hash.title}</h1>
       <p className="max-w-[62ch] text-faint m-0 leading-relaxed">{t.hash.lead}</p>
 
-      <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
+      <div className="mt-9 flex flex-wrap gap-2">
+        {(['hash', 'sign', 'seal'] as const).map((opcao) => (
+          <button
+            key={opcao}
+            type="button"
+            className="chip"
+            data-on={modo === opcao}
+            disabled={busy}
+            onClick={() => {
+              setModo(opcao)
+              reset()
+            }}
+          >
+            {opcao === 'hash'
+              ? t.hash.modeHash
+              : opcao === 'sign'
+                ? t.hash.modeSign
+                : t.hash.modeSeal}
+          </button>
+        ))}
+      </div>
+
+      {modo !== 'hash' && <ProofPanel key={modo} kind={modo} />}
+
+      {/* a tela da impressao fica montada, so escondida: assim a pessoa volta
+          pra aba e o resultado dela ainda esta la. o display vai no style
+          porque a classe grid ganharia do atributo hidden */}
+      <div
+        style={{ display: modo === 'hash' ? undefined : 'none' }}
+        className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14"
+      >
         <div className="sheet tilt-a p-6 sm:p-8">
           <div className="flex gap-2 mb-6">
             {(['file', 'text'] as const).map((option) => (

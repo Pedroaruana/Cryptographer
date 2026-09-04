@@ -5,6 +5,8 @@ export const en = {
     hash: 'Fingerprint',
     how: 'How it works',
     navHide: 'Hide',
+    navKeys: 'Keyring',
+    navLab: 'Simulators',
     navMeta: 'Metadata',
     menu: 'Menu',
     skip: 'Skip to content'
@@ -30,7 +32,40 @@ export const en = {
     verifyPlaceholder: 'paste the expected hash here',
     match: 'They match. The file is exactly the one you expected.',
     noMatch: 'They do not match. This is not the same file.',
-    note: 'This is not encryption. A hash cannot be reversed, so there is no way to get the file back from it.'
+    note: 'This is not encryption. A hash cannot be reversed, so there is no way to get the file back from it.',
+    modeHash: 'Fingerprint',
+    modeSign: 'Sign',
+    modeSeal: 'Seal with a password',
+    signLead:
+      'A fingerprint proves the file has not changed, but anyone can fingerprint any file. A signature also proves who did it: only your private key produces that mark, and your public key lets anyone check it.',
+    signKey: 'Your private key',
+    signKeyPlaceholder: 'paste your private key here',
+    signAction: 'Sign the file',
+    signWorking: 'Signing...',
+    signOut: 'The signature',
+    verifyKey: 'Public key of whoever signed',
+    verifyKeyPlaceholder: 'paste the public key here',
+    verifySig: 'The signature',
+    verifySigPlaceholder: 'paste the signature here',
+    verifyAction: 'Check the signature',
+    verifyOk: 'Checks out. That person signed it, and the file has not changed since.',
+    verifyNo:
+      'Does not check out. Either that key did not sign it, or the file changed afterwards.',
+    doSign: 'Sign',
+    doVerify: 'Check',
+    sealLead:
+      'This is the middle ground. A signature needs a key pair; here a password agreed between two people is enough. Whoever has the password can produce the seal and check the seal, whoever does not can do neither.',
+    sealAction: 'Seal the file',
+    sealWorking: 'Sealing...',
+    sealOut: 'The seal',
+    sealCheck: 'The seal that came with it',
+    sealCheckPlaceholder: 'paste the seal here',
+    sealCheckAction: 'Check the seal',
+    sealOk:
+      'Checks out. It came from someone who knows the password, and the file has not changed.',
+    sealNo: 'Does not check out. Either the password is different, or the file changed.',
+    doSeal: 'Seal',
+    doCheckSeal: 'Check'
   },
 
   hide: {
@@ -139,7 +174,7 @@ export const en = {
     titleA: 'Lock a file',
     titleB: 'the way you',
     titleC: 'lock a drawer.',
-    lead: 'Five things, all of them inside your browser. Lock a file so nobody opens it without the password. Hide a secret inside a photo or an audio file that still look the same. Turn a message into something unreadable. See what your photo already gives away without you knowing. Or take the fingerprint of a file to prove nobody touched it.',
+    lead: 'Six things, all of them inside your browser. Lock a file so nobody opens it without the password. Lock it for one specific person, without agreeing on a password with them first. Hide a secret inside a photo or an audio file that still look the same. Turn a message into something unreadable. See what your photo already gives away without you knowing. Or prove a file has not changed, and prove who made it.',
     ctaPrimary: 'Seal something',
     ctaSecondary: 'Open a sealed file',
     trust: 'Free · No account · No upload · Works offline',
@@ -239,6 +274,38 @@ export const en = {
         ]
       },
       {
+        key: 'keys',
+        to: '/chaveiro',
+        cta: 'Go generate my pair',
+        tab: 'Lock it for one person',
+        steps: [
+          {
+            n: '01',
+            title: 'Generate your pair',
+            text: 'Two keys come out. The public one you hand around, post on your profile, send in a group. The private one stays with you and never leaves the machine.'
+          },
+          {
+            n: '02',
+            title: 'They lock it with your public key',
+            text: 'They paste your key, pick the file and lock it. Not even they can open it afterwards, and that is exactly how it should be.'
+          },
+          {
+            n: '03',
+            title: 'Only your private key opens it',
+            text: 'You get the .cgpk, paste your private key and open it. Nobody had to agree on a password beforehand at any point.'
+          }
+        ],
+        panelTitle: 'Why this solves a real problem',
+        panelLead: 'A password agreed on the side is the weakest point of any locked file.',
+        rows: [],
+        notes: [
+          'To send a file with a password, both people have to agree on that password first, and that usually happens over WhatsApp, email or a phone call. If someone is reading that channel, they read the password too.',
+          'With a key pair that moment does not exist. The public key can be read by anyone with no harm at all, because it only serves to lock.',
+          'For every file the site generates a throwaway key, uses it once and discards it. Two files sent to the same person have nothing in common.',
+          'If you lose the private key, you lose everything that was sent to you. There is no recovery, for the usual reason: if there were, there would be a door.'
+        ]
+      },
+      {
         key: 'meta',
         to: '/metadados',
         cta: 'Go see what a photo gives away',
@@ -312,7 +379,7 @@ export const en = {
           {
             n: '01',
             title: 'Pick a machine',
-            text: 'There are six, from the 1918 Enigma to the 1467 cipher disc. All of them run the real algorithm, none is an animation.'
+            text: 'There are eight, from the 1918 Enigma to the 1467 cipher disc. All of them run the real algorithm, none is an animation.'
           },
           {
             n: '02',
@@ -424,6 +491,11 @@ export const en = {
       description:
         'Steganography in the browser: put a secret into the pixels of a PNG or the samples of a WAV, and pull it back out later. The photo still opens normally anywhere.'
     },
+    keyring: {
+      title: 'Keyring: lock a file with a public key',
+      description:
+        'Generate a key pair in the browser, lock a file for someone without agreeing on a password first, and split a secret into parts that only rebuild together.'
+    },
     metadata: {
       title: 'Read and strip EXIF metadata from a photo',
       description:
@@ -465,6 +537,69 @@ export const en = {
       'Compute SHA-1, SHA-256, SHA-384 and SHA-512 hashes',
       'Classic cipher simulators'
     ]
+  },
+
+  chaveiro: {
+    eyebrow: 'Keyring',
+    title: 'Lock it for someone without agreeing on a password.',
+    lead: 'Here you generate a pair: a public key you can hand out freely, and a private one that never leaves your machine. Whoever wants to send you a file locks it with your public key, and only your private key opens it. Nobody has to agree on a password beforehand, which is exactly where passwords tend to leak.',
+    tabPair: 'My pair',
+    tabSeal: 'Lock it for someone',
+    tabSplit: 'Split a secret',
+
+    pairTitle: 'Generate your pair',
+    pairLead:
+      'One click and the browser creates the keys. They never leave this page: close the tab without saving and they are gone for good.',
+    generate: 'Generate my pair',
+    generating: 'Generating...',
+    again: 'Generate another',
+    publicLabel: 'Public key',
+    publicHint: 'This one you hand out. Post it, send it in a group, put it on your profile.',
+    privateLabel: 'Private key',
+    privateHint:
+      'This one is yours alone. Whoever has it opens everything sent to you, so keep it like you keep a password.',
+    copy: 'Copy',
+    copied: 'Copied',
+    download: 'Download',
+    warnKeep:
+      'The site stores nothing. Close the tab and the keys are gone. Copy both before you leave, and never send the private one to anyone.',
+
+    sealDo: 'Lock',
+    sealOpen: 'Open what you got',
+    theirKey: 'Public key of the person receiving it',
+    theirKeyPlaceholder: 'paste the public key they gave you',
+    myKey: 'Your private key',
+    myKeyPlaceholder: 'paste your private key here',
+    sealAction: 'Lock it for them',
+    sealWorking: 'Locking...',
+    sealDone: 'Locked. Only they can open it.',
+    sealDownload: 'Download the locked file',
+    openAction: 'Open with my key',
+    openWorking: 'Opening...',
+    openDone: 'Opened.',
+    openDownload: 'Download the original',
+    drop: 'Drop a file here',
+    dropSealed: 'Drop the .cgpk file here',
+    dropHint: 'or click to pick one',
+
+    splitLead:
+      'Split a secret into several parts and require only some of them back. No single part gives anything away: until you gather the agreed number, each one is noise.',
+    secret: 'The secret',
+    secretPlaceholder: 'a password, a recovery phrase, a code...',
+    parts: 'How many parts',
+    need: 'How many are enough to rebuild it',
+    splitAction: 'Split',
+    splitDone: 'Split into {n} parts.',
+    partLabel: 'Part {n}',
+    joinTitle: 'Put it back together',
+    joinLead: 'Paste the parts one under the other, with a blank line between them.',
+    joinWarn:
+      'If a part is missing, the result comes out wrong with no warning. The math has no way of knowing how many were needed, so what shows up is noise, not an error.',
+    joinPlaceholder: 'paste the parts here',
+    joinAction: 'Rebuild the secret',
+    joinDone: 'Rebuilt.',
+    warnSplit:
+      'Keep the parts in different places. If all five sit in the same drawer, splitting protected nothing.'
   },
 
   form: {
@@ -532,9 +667,45 @@ export const en = {
   },
 
   lab: {
+    hand: {
+      title: 'Agree on a key without ever sending the key.',
+      lead: 'Two people who have never spoken before can arrive at the same secret number by trading messages in front of everyone. Anyone listening sees both numbers go by and still cannot work out the result.',
+      body: [
+        'Each one picks a number and keeps it. Then each does a calculation with the public number and sends the result to the other. Each redoes the calculation using what they received and their own secret, and both land on exactly the same value.',
+        'The trick is that the calculation is easy one way and absurdly expensive to undo. Whoever intercepts it has both public numbers and still lacks the secrets, which is exactly what it would take to reach the final value.',
+        'The numbers here are tiny so they fit on screen. In real life they are hundreds of digits long, and that is what separates "hard" from "impossible in practice". This is the calculation that runs every time you open a site over HTTPS.'
+      ],
+      tip: 'Move both sliders and watch: the numbers crossing the middle change, but the final value stays the same on both sides.',
+      secret: 'the secret',
+      sends: 'sends',
+      arrives: 'lands on',
+      her: 'Ana',
+      him: 'Bruno',
+      public: 'everyone knows:',
+      and: 'and',
+      spy: 'a listener sees only this',
+      same: 'both landed on the same number, and it never crossed the middle',
+      diff: 'both should land on the same number'
+    },
+    modes: {
+      title: 'Why GCM won.',
+      lead: 'AES is the same in both cases. What changes is the mode, the rule for how AES is applied to the whole file. And that choice decides whether someone can alter your encrypted file without you noticing.',
+      body: [
+        'In CBC the file is scrambled and that is it. Nobody reads it without the key, but nobody guarantees it arrived intact either. Someone along the way can flip a bit and the result will still open, with altered content.',
+        'In GCM, besides scrambling, AES computes a stamp over what it encrypted. On opening, the stamp is checked first. If it matches, it opens. If not, it refuses and hands back nothing at all, not even part of it.',
+        'That is why the whole site uses GCM and CBC only shows up here, as a demonstration. Confidentiality without integrity gives a false sense of safety: the file stays secret and stays tamperable at the same time.'
+      ],
+      tip: 'Drag to pick which byte of the encrypted file gets tampered with, and compare the two sides.',
+      original: 'the original message',
+      byte: 'tampered byte',
+      cbc: 'accepted it quietly and handed back something else',
+      gcm: 'noticed and refused',
+      refused: 'refused',
+      broke: 'came out unreadable'
+    },
     eyebrow: 'Workbench',
     title: 'Cryptography simulators',
-    lead: 'Six machines you can operate. Nothing here is a picture of a thing, it is the thing, running the real algorithm in your browser.',
+    lead: 'Eight machines you can operate. Nothing here is a picture of a thing, it is the thing, running the real algorithm in your browser.',
     seeAll: 'See all simulators',
     back: 'Back to the start',
 
@@ -883,6 +1054,13 @@ export const en = {
     'nothing-hidden':
       'There is nothing hidden in this photo. Either it never carried a secret, or it was resized or recompressed along the way.',
     corrupted: 'The file is damaged and cannot be read to the end.',
+    'bad-key':
+      'That does not look like a Cryptographer key. Check that you pasted the whole block, from BEGIN to END.',
+    'not-for-you':
+      'This file was not locked for that key. Either it belongs to someone else, or you pasted the wrong key.',
+    'few-parts': 'Parts are missing. Gather at least the number agreed when the secret was split.',
+    'mixed-parts':
+      'These parts do not match each other. Either they came from different secrets, or one is repeated.',
     unknown: 'Something broke on the way. Try again.',
     retry: 'Try again'
   },

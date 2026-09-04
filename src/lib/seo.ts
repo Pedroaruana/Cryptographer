@@ -10,6 +10,7 @@ const ROTAS = {
   '/encrypt': 'encrypt',
   '/decrypt': 'decrypt',
   '/esconder': 'hide',
+  '/chaveiro': 'keyring',
   '/metadados': 'metadata',
   '/hash': 'hash',
   '/simuladores': 'lab',
